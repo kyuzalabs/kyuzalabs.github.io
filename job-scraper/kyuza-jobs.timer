@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Kyuza job scraper every morning
+
+[Timer]
+OnCalendar=*-*-* 08:00:00 Asia/Jakarta
+Persistent=true
+
+[Install]
+WantedBy=timers.target

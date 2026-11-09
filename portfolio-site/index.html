@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kyuza Labs — Web3 Builder</title>
+<style>
+  :root { --bg:#0d1117; --card:#161b22; --line:#21262d; --txt:#e6edf3; --sub:#8b949e; --accent:#8b5cf6; --green:#3fb950; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--txt); font-family:-apple-system,Segoe UI,Roboto,sans-serif; line-height:1.5; }
+  .wrap { max-width:840px; margin:0 auto; padding:48px 20px; }
+  header { text-align:center; margin-bottom:40px; }
+  .avatar { width:88px; height:88px; border-radius:50%; background:linear-gradient(135deg,#8b5cf6,#ec4899); display:flex; align-items:center; justify-content:center; font-size:2.2rem; margin:0 auto 16px; }
+  h1 { font-size:1.9rem; }
+  .role { color:var(--accent); font-weight:600; margin:6px 0; }
+  .bio { color:var(--sub); max-width:520px; margin:0 auto; font-size:.95rem; }
+  .links { display:flex; gap:10px; justify-content:center; margin-top:20px; flex-wrap:wrap; }
+  .links a { color:var(--txt); text-decoration:none; border:1px solid var(--line); padding:8px 16px; border-radius:20px; font-size:.85rem; }
+  .links a:hover { border-color:var(--accent); }
+  h2 { font-size:1.1rem; margin:40px 0 14px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; }
+  .proj { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; }
+  .proj .tag { font-size:.7rem; color:var(--accent); text-transform:uppercase; letter-spacing:.5px; }
+  .proj h3 { font-size:1rem; margin:6px 0; }
+  .proj p { color:var(--sub); font-size:.85rem; }
+  .proj .tech { margin-top:10px; font-size:.75rem; color:var(--sub); }
+  .skills { display:flex; flex-wrap:wrap; gap:8px; }
+  .skills span { background:var(--card); border:1px solid var(--line); padding:5px 12px; border-radius:16px; font-size:.8rem; color:var(--sub); }
+  footer { text-align:center; color:var(--sub); font-size:.8rem; margin-top:48px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="avatar">👾</div>
+    <h1>Kyuza Labs</h1>
+    <div class="role">Web3 Builder · Automation &amp; AI</div>
+    <p class="bio">Bikin tools crypto &amp; automasi yang beneran kepake — dari scanner airdrop, dashboard harga, sampai AI assistant harian. Terbuka untuk bounty, freelance &amp; kolaborasi web3.</p>
+    <div class="links">
+      <a href="https://x.com/kyuzatempest" target="_blank">𝕏 @kyuzatempest</a>
+      <a href="https://t.me/Kyuzaatzy" target="_blank">Telegram @Kyuzaatzy</a>
+      <a href="#" target="_blank">GitHub</a>
+    </div>
+  </header>
+
+  <h2>🚀 Projects</h2>
+  <div class="grid">
+    <div class="proj"><span class="tag">Python</span><h3>Mint Radar</h3><p>Scanner airdrop/mint aktif dari katalog on-chain Agent ID, dengan filter risiko & gratis.</p><div class="tech">Python · on-chain data</div></div>
+    <div class="proj"><span class="tag">Web</span><h3>Crypto Dashboard</h3><p>Dashboard harga crypto real-time dari Binance API.</p><div class="tech">HTML · JS · Binance API</div></div>
+    <div class="proj"><span class="tag">Telegram Bot</span><h3>AI Daily Assistant</h3><p>Bot natural-language: catat pengeluaran, reminder (tanggal + jam), split bill. Live 24/7.</p><div class="tech">Python · SQLite · systemd</div></div>
+    <div class="proj"><span class="tag">Web App</span><h3>Crypto Portfolio</h3><p>Tracker portofolio live dengan untung/rugi & simpan otomatis.</p><div class="tech">HTML · JS · localStorage</div></div>
+    <div class="proj"><span class="tag">Utility</span><h3>Crypto Calculator</h3><p>Kalkulator DCA & profit/loss.</p><div class="tech">HTML · JS</div></div>
+  </div>
+
+  <h2>🛠️ Skills</h2>
+  <div class="skills">
+    <span>Python</span><span>JavaScript</span><span>Node.js</span><span>SQLite</span><span>Web3 / Solana / BSC</span><span>Telegram Bot</span><span>Automation</span><span>AI Integration</span>
+  </div>
+
+  <footer>© 2026 Kyuza · dibangun bareng AI agent Kyuza 🤖</footer>
+</div>
+</body>
+</html>

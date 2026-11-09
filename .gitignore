@@ -1,0 +1,13 @@
+# Keystroke separators / secrets — JANGAN upload ke GitHub
+token.txt
+job.env
+*.env
+.env
+
+# Database lokal (data pribadi)
+*.db
+*.sqlite3
+
+# Python cache
+__pycache__/
+*.pyc

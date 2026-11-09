@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baby & Pet Care Tracker</title>
+<style>
+  :root { --bg:#0d1117; --card:#161b22; --line:#21262d; --txt:#e6edf3; --sub:#8b949e; --accent:#8b5cf6; --pink:#ec4899; --blue:#38bdf8; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--txt); font-family:-apple-system,Segoe UI,Roboto,sans-serif; padding:24px; }
+  .wrap { max-width:640px; margin:0 auto; }
+  h1 { font-size:1.4rem; margin-bottom:4px; }
+  .sub { color:var(--sub); font-size:.85rem; margin-bottom:20px; }
+  .tabs { display:flex; gap:8px; margin-bottom:14px; }
+  .tabs button { flex:1; background:var(--card); border:1px solid var(--line); color:var(--txt); padding:11px; border-radius:8px; cursor:pointer; font-weight:700; }
+  .tabs button.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:16px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; }
+  .evt { background:#0d1117; border:1px solid var(--line); border-radius:8px; padding:12px; text-align:center; cursor:pointer; font-size:.9rem; }
+  .evt:hover { border-color:var(--accent); }
+  .evt .ico { font-size:1.4rem; }
+  .summary { display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; }
+  .stat { flex:1; min-width:100px; background:#0d1117; border:1px solid var(--line); border-radius:8px; padding:10px; text-align:center; }
+  .stat .n { font-size:1.4rem; font-weight:700; }
+  .stat .l { color:var(--sub); font-size:.75rem; }
+  .tl { margin-top:12px; }
+  .tl .row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--line); font-size:.9rem; }
+  .tl .row span:first-child { color:var(--sub); }
+  .empty { color:var(--sub); text-align:center; padding:20px; font-size:.9rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🐣🐾 Care Tracker</h1>
+  <div class="sub">Catat pola harian (bayi / hewan) — data tersimpan di perangkatmu.</div>
+
+  <div class="tabs">
+    <button class="active" data-mode="baby">👶 Bayi</button>
+    <button data-mode="pet">🐾 Hewan</button>
+  </div>
+
+  <div class="card">
+    <div class="grid" id="events"></div>
+
+    <h3 style="margin:16px 0 4px; font-size:.9rem; color:var(--sub)">Ringkasan hari ini</h3>
+    <div class="summary" id="summary"></div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin:0 0 6px; font-size:.9rem; color:var(--sub)">Riwayat</h3>
+    <div class="tl" id="history"></div>
+  </div>
+</div>
+
+<script>
+const LS = "care_tracker_v1";
+let logs = JSON.parse(localStorage.getItem(LS) || "[]");
+let mode = "baby";
+const EVENTS = {
+  baby: { "🍼":"Menyusu", "😴":"Tidur", "💩":"Popok", "💊":"Obat", "📖":"Main/Belajar" },
+  pet:  { "🍖":"Makan", "💊":"Obat", "💉":"Vaksin", "🚶":"Jalan", "🛁":"Mandi" }
+};
+
+function modeLabel() { return mode === "baby" ? "Bayi" : "Hewan"; }
+function today() { return new Date().toDateString(); }
+
+function render() {
+  // event buttons
+  const g = document.getElementById("events");
+  g.innerHTML = Object.entries(EVENTS[mode]).map(([ico, label]) =>
+    `<div class="evt" data-label="${label}"><div class="ico">${ico}</div>${label}</div>`).join("");
+
+  // summary today
+  const todaysLogs = logs.filter(l => l.mode === mode && l.day === today());
+  const counts = {};
+  Object.values(EVENTS[mode]).forEach(l => counts[l] = 0);
+  todaysLogs.forEach(l => counts[l.label] = (counts[l.label] || 0) + 1);
+  document.getElementById("summary").innerHTML = Object.entries(counts).map(([l, n]) =>
+    `<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+
+  // history (this mode, latest first)
+  const hist = logs.filter(l => l.mode === mode).slice().reverse().slice(0, 20);
+  const hEl = document.getElementById("history");
+  hEl.innerHTML = hist.length ? hist.map(l =>
+    `<div class="row"><span>${l.label} · ${l.time}</span><span>${l.day === today() ? "Hari ini" : l.day}</span></div>`).join("")
+    : `<div class="empty">Belum ada catatan. Klik aktivitas di atas 👆</div>`;
+}
+
+document.querySelectorAll("[data-mode]").forEach(b => b.onclick = () => {
+  document.querySelectorAll("[data-mode]").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  mode = b.dataset.mode;
+  render();
+});
+
+document.addEventListener("click", e => {
+  if (e.target.closest(".evt")) {
+    const label = e.target.closest(".evt").dataset.label;
+    logs.push({ mode, label, day: today(), time: new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) });
+    localStorage.setItem(LS, JSON.stringify(logs));
+    render();
+  }
+});
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crypto Calculator</title>
+<style>
+  :root { --bg:#0d1117; --card:#161b22; --line:#21262d; --txt:#e6edf3; --sub:#8b949e; --green:#3fb950; --red:#f85149; --accent:#8b5cf6; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--txt); font-family:-apple-system,Segoe UI,Roboto,sans-serif; min-height:100vh; padding:24px; }
+  .wrap { max-width:640px; margin:0 auto; }
+  h1 { font-size:1.4rem; margin-bottom:4px; }
+  .sub { color:var(--sub); font-size:.85rem; margin-bottom:20px; }
+  .tabs { display:flex; gap:8px; margin-bottom:16px; }
+  .tabs button { flex:1; background:var(--card); border:1px solid var(--line); color:var(--txt); padding:10px; border-radius:8px; cursor:pointer; font-weight:600; }
+  .tabs button.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; }
+  .field { margin-bottom:12px; }
+  .field label { display:block; font-size:.75rem; color:var(--sub); margin-bottom:4px; }
+  input { width:100%; background:#0d1117; border:1px solid var(--line); border-radius:8px; color:var(--txt); padding:10px; font-size:.95rem; }
+  input:focus { outline:none; border-color:var(--accent); }
+  .result { background:#0d1117; border:1px solid var(--line); border-radius:8px; padding:14px; margin-top:14px; font-size:1.1rem; }
+  .result .big { font-size:1.5rem; font-weight:700; }
+  .pos { color:var(--green); font-weight:700; }
+  .neg { color:var(--red); font-weight:700; }
+  .hint { color:var(--sub); font-size:.8rem; margin-top:8px; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🧮 Crypto Calculator</h1>
+  <div class="sub">Kalkulator DCA & profit/loss — 100% offline</div>
+
+  <div class="tabs">
+    <button class="active" data-tab="dca">DCA (rata-rata)</button>
+    <button data-tab="pnl">Profit / Loss</button>
+  </div>
+
+  <div class="card" id="tab-dca">
+    <div class="field"><label>Harga beli 1</label><input id="dca_p1" type="number" step="any" placeholder="45000"></div>
+    <div class="field"><label>Jumlah beli 1</label><input id="dca_q1" type="number" step="any" placeholder="0.1"></div>
+    <div class="field"><label>Harga beli 2</label><input id="dca_p2" type="number" step="any" placeholder="40000"></div>
+    <div class="field"><label>Jumlah beli 2</label><input id="dca_q2" type="number" step="any" placeholder="0.2"></div>
+    <div class="result" id="dca_out">Masukkan angka di atas 👆</div>
+  </div>
+
+  <div class="card hidden" id="tab-pnl">
+    <div class="field"><label>Harga beli (entry)</label><input id="pnl_entry" type="number" step="any" placeholder="45000"></div>
+    <div class="field"><label>Harga jual / sekarang (exit)</label><input id="pnl_exit" type="number" step="any" placeholder="50000"></div>
+    <div class="field"><label>Jumlah (opsional)</label><input id="pnl_qty" type="number" step="any" placeholder="1"></div>
+    <div class="result" id="pnl_out">Masukkan angka di atas 👆</div>
+  </div>
+
+  <div class="hint">⚠️ Alat bantu estimasi — bukan nasihat keuangan.</div>
+</div>
+
+<script>
+function val(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? null : v; }
+function fmt(n, dec=2) { return n.toLocaleString("en-US", { maximumFractionDigits: dec }); }
+
+function calcDCA() {
+  const p1 = val("dca_p1"), q1 = val("dca_q1"), p2 = val("dca_p2"), q2 = val("dca_q2");
+  if (p1 == null || q1 == null || p2 == null || q2 == null) { document.getElementById("dca_out").innerHTML = "Isi semua kolom (bisa 0 kalau cuma 1 pembelian)."; return; }
+  const totalQty = q1 + q2;
+  const totalCost = p1 * q1 + p2 * q2;
+  if (totalQty <= 0) { document.getElementById("dca_out").innerHTML = "Total jumlah harus lebih dari 0."; return; }
+  const avg = totalCost / totalQty;
+  document.getElementById("dca_out").innerHTML = `
+    Total jumlah: <b>${fmt(totalQty, 6)}</b><br>
+    Total modal: <b>${fmt(totalCost)}</b><br>
+    Harga rata-rata: <span class="big">${fmt(avg, 4)}</span>`;
+}
+
+function calcPnl() {
+  const entry = val("pnl_entry"), exit = val("pnl_exit");
+  if (entry == null || exit == null) { document.getElementById("pnl_out").innerHTML = "Isi harga beli & harga jual."; return; }
+  const qty = val("pnl_qty") || 1;
+  const diff = exit - entry;
+  const pct = entry ? (diff / entry) * 100 : 0;
+  const total = diff * qty;
+  const cls = diff >= 0 ? "pos" : "neg";
+  const sign = diff >= 0 ? "+" : "";
+  document.getElementById("pnl_out").innerHTML = `
+    Per unit: <span class="${cls}">${sign}${fmt(diff)} (${sign}${pct.toFixed(2)}%)</span><br>
+    Total (${fmt(qty, 6)} unit): <span class="${cls}">${sign}${fmt(total)}</span>`;
+}
+
+document.querySelectorAll("[data-tab]").forEach(btn => btn.onclick = () => {
+  document.querySelectorAll("[data-tab]").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("tab-dca").classList.toggle("hidden", btn.dataset.tab !== "dca");
+  document.getElementById("tab-pnl").classList.toggle("hidden", btn.dataset.tab !== "pnl");
+});
+
+["dca_p1","dca_q1","dca_p2","dca_q2"].forEach(id => document.getElementById(id).oninput = calcDCA);
+["pnl_entry","pnl_exit","pnl_qty"].forEach(id => document.getElementById(id).oninput = calcPnl);
+</script>
+</body>
+</html>

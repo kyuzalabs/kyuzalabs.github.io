@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document & Warranty Wallet</title>
+<style>
+  :root { --bg:#0d1117; --card:#161b22; --line:#21262d; --txt:#e6edf3; --sub:#8b949e; --green:#3fb950; --amber:#d29922; --red:#f85149; --accent:#8b5cf6; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--txt); font-family:-apple-system,Segoe UI,Roboto,sans-serif; padding:24px; }
+  .wrap { max-width:640px; margin:0 auto; }
+  h1 { font-size:1.4rem; margin-bottom:4px; }
+  .sub { color:var(--sub); font-size:.85rem; margin-bottom:20px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:16px; }
+  .row { display:flex; gap:10px; flex-wrap:wrap; }
+  .field { flex:1; min-width:130px; margin-bottom:8px; }
+  label { display:block; font-size:.75rem; color:var(--sub); margin-bottom:4px; }
+  input { width:100%; background:#0d1117; border:1px solid var(--line); border-radius:8px; color:var(--txt); padding:10px; font-size:.9rem; }
+  input:focus { outline:none; border-color:var(--accent); }
+  button { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 16px; cursor:pointer; font-weight:600; }
+  .item { display:flex; align-items:center; gap:12px; padding:12px; border:1px solid var(--line); border-radius:10px; margin-bottom:8px; }
+  .item .info { flex:1; }
+  .item .t { font-weight:600; }
+  .item .d { color:var(--sub); font-size:.8rem; }
+  .badge { font-size:.75rem; padding:3px 10px; border-radius:12px; font-weight:700; white-space:nowrap; }
+  .b-ok { background:rgba(63,185,80,.15); color:var(--green); }
+  .b-warn { background:rgba(210,153,34,.15); color:var(--amber); }
+  .b-exp { background:rgba(248,81,73,.15); color:var(--red); }
+  .del { background:transparent; border:1px solid var(--line); color:var(--sub); padding:4px 8px; border-radius:6px; cursor:pointer; }
+  .empty { color:var(--sub); text-align:center; padding:20px; font-size:.9rem; }
+  .legend { display:flex; gap:14px; font-size:.75rem; color:var(--sub); margin-bottom:10px; flex-wrap:wrap; }
+  select { width:100%; background:#0d1117; border:1px solid var(--line); border-radius:8px; color:var(--txt); padding:10px; font-size:.9rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📁 Document & Warranty Wallet</h1>
+  <div class="sub">Simpan garansi, pajak, paspor, asuransi — diingatkan kalau mau expired.</div>
+
+  <div class="card">
+    <div class="row">
+      <div class="field" style="flex:2"><label>Nama dokumen</label><input id="name" placeholder="Garansi laptop / Pajak STNK"></div>
+      <div class="field"><label>Kategori</label>
+        <select id="cat">
+          <option>Garansi</option><option>Pajak</option><option>Paspor</option><option>STNK</option>
+          <option>Asuransi</option><option>Kontrak</option><option>Langganan</option><option>Lainnya</option>
+        </select>
+      </div>
+      <div class="field"><label>Tanggal expired</label><input id="exp" type="date"></div>
+      <div class="field" style="align-self:flex-end"><button id="add">+ Simpan</button></div>
+    </div>
+  </div>
+
+  <div class="legend"><span>🟢 aman</span><span>🟡 &lt;30 hari</span><span>🔴 expired</span></div>
+  <div class="card" id="list"></div>
+</div>
+
+<script>
+const LS = "doc_wallet_v1";
+let docs = JSON.parse(localStorage.getItem(LS) || "[]");
+const $ = id => document.getElementById(id);
+
+function status(expDate) {
+  const exp = new Date(expDate + "T00:00:00");
+  const now = new Date(); now.setHours(0,0,0,0);
+  const days = Math.round((exp - now) / 86400000);
+  const fmt = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric" }).format(exp);
+  if (days < 0) return { label: `EXPIRED · ${fmt}`, cls: "b-exp" };
+  if (days <= 30) return { label: `${days} hari lagi · ${fmt}`, cls: "b-warn" };
+  return { label: `${fmt}`, cls: "b-ok" };
+}
+
+function render() {
+  const el = $("list");
+  if (!docs.length) { el.innerHTML = `<div class="empty">Belum ada dokumen. Tambahkan di atas 👆</div>`; return; }
+  docs.sort((a,b) => a.exp.localeCompare(b.exp));
+  el.innerHTML = docs.map((d, i) => {
+    const s = status(d.exp);
+    return `<div class="item">
+      <div class="info">
+        <div class="t">${d.name}</div>
+        <div class="d">${d.cat} · ${s.label}</div>
+      </div>
+      <span class="badge ${s.cls}">${daysText(d.exp)}</span>
+      <button class="del" data-i="${i}">✕</button>
+    </div>`;
+  }).join("");
+}
+
+function daysText(expDate) {
+  const exp = new Date(expDate + "T00:00:00");
+  const now = new Date(); now.setHours(0,0,0,0);
+  const days = Math.round((exp - now) / 86400000);
+  if (days < 0) return "EXPIRED";
+  if (days === 0) return "Hari ini";
+  return `${days} hari`;
+}
+
+$("add").onclick = () => {
+  const name = $("name").value.trim();
+  const exp = $("exp").value;
+  if (!name || !exp) { alert("Isi nama dokumen & tanggal expired"); return; }
+  docs.push({ name, cat: $("cat").value, exp });
+  localStorage.setItem(LS, JSON.stringify(docs));
+  $("name").value = ""; $("exp").value = "";
+  render();
+};
+
+document.addEventListener("click", e => {
+  if (e.target.classList.contains("del")) {
+    docs.splice(parseInt(e.target.dataset.i), 1);
+    localStorage.setItem(LS, JSON.stringify(docs));
+    render();
+  }
+});
+
+render();
+</script>
+</body>
+</html>

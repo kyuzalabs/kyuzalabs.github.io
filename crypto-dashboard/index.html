@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crypto Dashboard</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #21262d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --green: #3fb950;
+    --red: #f85149;
+    --accent: #8b5cf6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    padding: 32px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+  h1 { font-size: 26px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .badge { color: var(--muted); font-size: 11px; border: 1px solid var(--border); border-radius: 20px; padding: 2px 8px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-top: 24px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    transition: transform .12s ease, border-color .12s ease;
+  }
+  .card:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .mono {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; color: #fff; font-size: 15px;
+  }
+  .sym { font-weight: 700; font-size: 16px; }
+  .pair { color: var(--muted); font-size: 12px; }
+  .price { font-size: 22px; font-weight: 700; }
+  .chg { font-size: 13px; font-weight: 600; margin-top: 4px; }
+  .up { color: var(--green); }
+  .down { color: var(--red); }
+  .hl { color: var(--muted); font-size: 11px; margin-top: 8px; line-height: 1.5; }
+  footer { margin-top: 28px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Crypto Dashboard</h1>
+    <span class="badge">live · Binance</span>
+  </header>
+  <div class="muted" id="updated">Loading…</div>
+  <div class="grid" id="grid"></div>
+  <footer>Data: Binance public API (no key). Refresh tiap 60 detik.</footer>
+
+<script>
+// Watchlist — tambah/hapus pair di sini (base + quote, tanpa "/")
+const WATCH = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "DOGEUSDT", "ADAUSDT"];
+const COLORS = { BTCUSDT:"#f7931a", ETHUSDT:"#627eea", SOLUSDT:"#14f195", BNBUSDT:"#f3ba2f", DOGEUSDT:"#c2a633", ADAUSDT:"#0033ad" };
+
+async function load() {
+  const symbols = JSON.stringify(WATCH);
+  const url = `https://api.binance.com/api/v3/ticker/24hr?symbols=${encodeURIComponent(symbols)}`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    render(data);
+    document.getElementById("updated").textContent =
+      "Updated " + new Date().toLocaleTimeString();
+  } catch (e) {
+    document.getElementById("updated").textContent = "Gagal ambil data: " + e.message;
+  }
+}
+
+function render(tickers) {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  for (const t of tickers) {
+    const up = parseFloat(t.priceChangePercent) >= 0;
+    const base = t.symbol.replace("USDT", "");
+    const color = COLORS[t.symbol] || "#8b5cf6";
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="top">
+        <div class="mono" style="background:${color}">${base[0]}</div>
+        <div>
+          <div class="sym">${base}</div>
+          <div class="pair">${t.symbol}</div>
+        </div>
+      </div>
+      <div class="price">$${parseFloat(t.lastPrice).toLocaleString("en-US", { maximumFractionDigits: 2 })}</div>
+      <div class="chg ${up ? "up" : "down"}">${up ? "▲" : "▼"} ${Math.abs(parseFloat(t.priceChangePercent)).toFixed(2)}% (24h)</div>
+      <div class="hl">24h high ${parseFloat(t.highPrice).toLocaleString("en-US", { maximumFractionDigits: 2 })} · low ${parseFloat(t.lowPrice).toLocaleString("en-US", { maximumFractionDigits: 2 })}</div>
+    `;
+    grid.appendChild(card);
+  }
+}
+
+load();
+setInterval(load, 60000);
+</script>
+</body>
+</html>

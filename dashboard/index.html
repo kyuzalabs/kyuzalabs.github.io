@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Server Health Dashboard</title>
+<style>
+  :root { --bg:#0d1117; --card:#161b22; --line:#21262d; --txt:#e6edf3; --sub:#8b949e; --accent:#8b5cf6; --green:#3fb950; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--txt); font-family:-apple-system,Segoe UI,Roboto,sans-serif; line-height:1.55; padding:24px; }
+  .wrap { max-width:820px; margin:0 auto; }
+  a { color:var(--accent); }
+  h1 { font-size:1.5rem; margin-bottom:4px; }
+  .sub { color:var(--sub); font-size:.9rem; margin-bottom:20px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; margin-bottom:16px; }
+  h2 { font-size:1.05rem; margin-bottom:10px; }
+  code, pre { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+  .cmd { background:#0d1117; border:1px solid var(--line); border-radius:8px; padding:8px 12px; margin:6px 0; font-size:.85rem; display:block; overflow-x:auto; white-space:nowrap; }
+  .cmd .c { color:var(--green); }
+  pre.code { background:#0d1117; border:1px solid var(--line); border-radius:8px; padding:14px; overflow:auto; font-size:.8rem; max-height:520px; line-height:1.45; white-space:pre; }
+  .btns { display:flex; gap:8px; margin-top:8px; }
+  .btn { background:var(--accent); color:#fff; text-decoration:none; border:none; border-radius:8px; padding:8px 14px; font-size:.85rem; cursor:pointer; font-weight:600; }
+  .btn.ghost { background:transparent; border:1px solid var(--line); color:var(--sub); }
+  .tag { display:inline-block; font-size:.7rem; color:var(--accent); border:1px solid var(--line); border-radius:12px; padding:2px 10px; margin-right:4px; }
+  .note { color:var(--sub); font-size:.82rem; margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🖥️ Server Health Dashboard</h1>
+  <div class="sub"><span class="tag">Python</span>Pantau CPU/RAM/disk/uptime + status service — bisa dipakai di server siapa pun.</div>
+
+  <div class="card">
+    <h2>ℹ️ Apa ini & cara pakai</h2>
+    <p style="color:var(--sub); font-size:.9rem;">Satu file Python <b>tanpa dependency</b> yang baca <code>/proc</code> + <code>systemctl</code>, terus tampil jadi dashboard web live.</p>
+    <div class="note"><b>Cara pakai dasar:</b></div>
+    <span class="cmd"><span class="c">python3</span> server_dashboard.py</span>
+    <div class="note">Lalu buka <code>http://localhost:8090</code> di browser.</div>
+    <div class="note" style="margin-top:12px"><b>Mantau service kamu sendiri</b> (ganti nama service-nya):</div>
+    <span class="cmd"><span class="c">python3</span> server_dashboard.py --services "bot-ku.service,nginx.service"</span>
+    <div class="note">Nama service bisa dilihat pakai: <code>systemctl --type=service</code></div>
+    <div class="btns">
+      <a class="btn" href="server_dashboard.py" download>⬇️ Download script</a>
+      <button class="btn ghost" id="copy">📋 Copy kode</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📄 Source code (server_dashboard.py)</h2>
+    <pre class="code" id="code">Memuat script...</pre>
+  </div>
+
+  <div class="card">
+    <h2>💡 Contoh tampilan live</h2>
+    <p style="color:var(--sub); font-size:.85rem;">Dashboard yang jalan di server Kyuza (real): <a href="https://car-cant-items-recorders.trycloudflare.com/" target="_blank">buka di sini</a></p>
+  </div>
+</div>
+
+<script>
+fetch("server_dashboard.py")
+  .then(r => r.text())
+  .then(t => { document.getElementById("code").textContent = t; })
+  .catch(() => { document.getElementById("code").textContent = "Gagal memuat server_dashboard.py"; });
+
+document.getElementById("copy").onclick = () => {
+  const t = document.getElementById("code").textContent;
+  navigator.clipboard.writeText(t).then(() => {
+    const b = document.getElementById("copy"); b.textContent = "✅ Tersalin!"; setTimeout(() => b.textContent = "📋 Copy kode", 1500);
+  });
+};
+</script>
+</body>
+</html>

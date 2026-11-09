@@ -1,0 +1,11 @@
+[Unit]
+Description=Kyuza job scraper — daily digest
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=agentuser
+WorkingDirectory=/home/agentuser/github-projects/job-scraper
+EnvironmentFile=/home/agentuser/github-projects/job-scraper/job.env
+ExecStart=/usr/bin/python3 /home/agentuser/github-projects/job-scraper/job_scraper.py --keyword crypto web3 blockchain python --top 10 --send

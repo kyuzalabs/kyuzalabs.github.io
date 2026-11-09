@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emergency Info Card QR</title>
+<style>
+  :root { --bg:#0d1117; --card:#161b22; --line:#21262d; --txt:#e6edf3; --sub:#8b949e; --accent:#f85149; --ok:#3fb950; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--txt); font-family:-apple-system,Segoe UI,Roboto,sans-serif; padding:24px; }
+  .wrap { max-width:520px; margin:0 auto; }
+  h1 { font-size:1.4rem; margin-bottom:4px; }
+  .sub { color:var(--sub); font-size:.85rem; margin-bottom:20px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; margin-bottom:16px; }
+  .field { margin-bottom:12px; }
+  label { display:block; font-size:.75rem; color:var(--sub); margin-bottom:4px; }
+  input, textarea, select { width:100%; background:#0d1117; border:1px solid var(--line); border-radius:8px; color:var(--txt); padding:10px; font-size:.95rem; }
+  textarea { min-height:56px; resize:vertical; }
+  input:focus, textarea:focus { outline:none; border-color:var(--accent); }
+  button { width:100%; background:var(--accent); color:#fff; border:none; border-radius:8px; padding:12px; font-size:1rem; cursor:pointer; font-weight:700; }
+  button:hover { opacity:.9; }
+  .icard { border:2px solid var(--accent); border-radius:12px; padding:16px; background:#fff; color:#111; }
+  .icard .ice { color:var(--accent); font-weight:800; font-size:.8rem; letter-spacing:1px; }
+  .icard h2 { font-size:1.2rem; margin:4px 0 12px; }
+  .icard .line { font-size:.9rem; margin:6px 0; display:flex; gap:8px; }
+  .icard .line b { min-width:90px; }
+  .qrx { text-align:center; margin-top:12px; }
+  .qrx img { border:1px solid #ddd; border-radius:8px; }
+  .hint { color:var(--sub); font-size:.75rem; margin-top:8px; text-align:center; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🆘 Emergency Info Card QR</h1>
+  <div class="sub">Kartu darurat digital — QR-nya bisa diprint & ditempel. Data cuma tersimpan di perangkatmu.</div>
+
+  <div class="card">
+    <div class="field"><label>Nama</label><input id="nama" placeholder="Nama lengkap"></div>
+    <div class="field"><label>Golongan darah</label>
+      <select id="darah"><option value="">— pilih —</option><option>A</option><option>B</option><option>AB</option><option>O</option><option>Tidak tahu</option></select>
+    </div>
+    <div class="field"><label>Alergi (pisahkan dengan koma)</label><input id="alergi" placeholder="seafood, penicillin"></div>
+    <div class="field"><label>Obat / kondisi medis</label><input id="medis" placeholder="insulin, asma"></div>
+    <div class="field"><label>Kontak darurat 1 (nama + telepon)</label><input id="k1" placeholder="Ibu — 0812xxxx"></div>
+    <div class="field"><label>Kontak darurat 2</label><input id="k2" placeholder="Ayah — 0813xxxx"></div>
+    <div class="field"><label>Catatan lain (opsional)</label><textarea id="note"></textarea></div>
+    <button id="gen">Buat QR Card</button>
+  </div>
+
+  <div class="icard hidden" id="out">
+    <div class="ice">ICE — DALAM KEADAAN DARURAT HUBUNGI:</div>
+    <h2 id="c_nama"></h2>
+    <div class="line"><b>Gol. darah</b><span id="c_darah"></span></div>
+    <div class="line"><b>Alergi</b><span id="c_alergi"></span></div>
+    <div class="line"><b>Medis</b><span id="c_medis"></span></div>
+    <div class="line"><b>Kontak</b><span id="c_kontak"></span></div>
+    <div class="line" id="c_note_line"><b>Catatan</b><span id="c_note"></span></div>
+    <div class="qrx"><img id="qr" alt="QR"><div class="hint">Scan untuk lihat info darurat</div></div>
+  </div>
+</div>
+
+<script>
+const LS = "emergency_card_v1";
+function $(id){ return document.getElementById(id); }
+
+// restore
+try { const d = JSON.parse(localStorage.getItem(LS)); if (d) { for (const k in d) if ($(k)) $(k).value = d[k]; } } catch {}
+
+$("gen").onclick = () => {
+  const nama = $("nama").value.trim() || "—";
+  const darah = $("darah").value || "—";
+  const alergi = $("alergi").value.trim() || "—";
+  const medis = $("medis").value.trim() || "—";
+  const k1 = $("k1").value.trim(); const k2 = $("k2").value.trim();
+  const kontak = [k1, k2].filter(Boolean).join(" | ") || "—";
+  const note = $("note").value.trim();
+
+  $("c_nama").textContent = nama;
+  $("c_darah").textContent = darah;
+  $("c_alergi").textContent = alergi;
+  $("c_medis").textContent = medis;
+  $("c_kontak").textContent = kontak;
+  $("c_note").textContent = note || "—";
+  $("c_note_line").style.display = note ? "" : "none";
+
+  const data = `DARURAT (ICE)\nNama: ${nama}\nGol. darah: ${darah}\nAlergi: ${alergi}\nObat/medis: ${medis}\nKontak: ${kontak}${note ? `\nCatatan: ${note}` : ""}`;
+  $("qr").src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(data)}`;
+  $("out").classList.remove("hidden");
+  $("out").scrollIntoView({ behavior: "smooth" });
+
+  localStorage.setItem(LS, JSON.stringify({ nama, darah, alergi, medis, k1, k2, note }));
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kyuza Labs — Projects</title>
+<style>
+  :root { --bg:#0a0e14; --card:#141a24; --line:#222b3a; --txt:#e8eef7; --sub:#8b97a8; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    background: var(--bg);
+    background-image: radial-gradient(900px 420px at 85% -10%, rgba(139,92,246,.16), transparent),
+                      radial-gradient(700px 400px at -10% 25%, rgba(56,189,248,.10), transparent),
+                      radial-gradient(600px 500px at 50% 110%, rgba(236,72,153,.08), transparent);
+    color:var(--txt); font-family:-apple-system,Segoe UI,Roboto,sans-serif; line-height:1.5;
+    min-height:100vh; padding:0 16px 48px;
+  }
+  .wrap { max-width:760px; margin:0 auto; }
+  header { text-align:center; padding:52px 0 6px; }
+  .avatar { width:78px; height:78px; border-radius:50%; margin:0 auto 14px;
+    background:linear-gradient(135deg,#8b5cf6,#ec4899); display:flex; align-items:center; justify-content:center;
+    font-size:2rem; box-shadow:0 8px 32px rgba(139,92,246,.4); }
+  h1 { font-size:2rem; font-weight:800;
+    background:linear-gradient(90deg,#c4b5fd,#7dd3fc); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .role { color:var(--sub); font-size:.95rem; margin-top:4px; }
+  .stats { display:flex; gap:8px; justify-content:center; margin:20px 0 6px; flex-wrap:wrap; }
+  .chip { background:rgba(139,92,246,.12); border:1px solid rgba(139,92,246,.28); border-radius:20px; padding:6px 14px; font-size:.78rem; color:#c4b5fd; }
+  h2 { font-size:.72rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--sub); margin:36px 0 12px; font-weight:700; }
+  .proj { display:flex; align-items:center; gap:14px; background:var(--card); border:1px solid var(--line);
+    border-radius:14px; padding:14px 16px; margin-bottom:10px; text-decoration:none; color:inherit;
+    transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease; }
+  .proj:hover { transform:translateY(-2px); border-color:#8b5cf6; box-shadow:0 8px 26px rgba(0,0,0,.4); }
+  .ico { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
+  .info { flex:1; min-width:0; }
+  .info h3 { font-size:.98rem; font-weight:650; }
+  .info p { color:var(--sub); font-size:.8rem; margin-top:1px; }
+  .tag { font-size:.62rem; font-weight:700; border-radius:10px; padding:3px 9px; white-space:nowrap; letter-spacing:.6px; }
+  .t-web { background:rgba(139,92,246,.16); color:#c4b5fd; }
+  .t-py  { background:rgba(63,185,80,.16); color:#7ee2a0; }
+  .t-tg  { background:rgba(56,189,248,.16); color:#7dd3fc; }
+  footer { text-align:center; color:var(--sub); font-size:.75rem; margin-top:44px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="avatar">👾</div>
+    <h1>Kyuza Labs</h1>
+    <div class="role">Web3 Builder · Automation &amp; AI</div>
+    <div class="stats">
+      <span class="chip">🚀 8 Project</span>
+      <span class="chip">🤖 Bot live 24/7</span>
+      <span class="chip">💼 Open to work</span>
+    </div>
+  </header>
+
+  <h2>🌐 Web Apps</h2>
+  <a class="proj" href="emergency-qr/index.html">
+    <div class="ico" style="background:linear-gradient(135deg,#f87171,#f59e0b)">🆘</div>
+    <div class="info"><h3>Emergency Info Card QR</h3><p>Kartu darurat + QR code, bisa diprint</p></div><span class="tag t-web">WEB</span>
+  </a>
+  <a class="proj" href="doc-wallet/index.html">
+    <div class="ico" style="background:linear-gradient(135deg,#fbbf24,#f59e0b)">📁</div>
+    <div class="info"><h3>Document &amp; Warranty Wallet</h3><p>Dompet dokumen + reminder expired otomatis</p></div><span class="tag t-web">WEB</span>
+  </a>
+  <a class="proj" href="care-tracker/index.html">
+    <div class="ico" style="background:linear-gradient(135deg,#ec4899,#f472b6)">🐣</div>
+    <div class="info"><h3>Baby &amp; Pet Care Tracker</h3><p>Pencatat aktivitas harian bayi/hewan</p></div><span class="tag t-web">WEB</span>
+  </a>
+  <a class="proj" href="portfolio-site/index.html">
+    <div class="ico" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)">👾</div>
+    <div class="info"><h3>Portfolio Site</h3><p>Landing page / link-in-bio personal</p></div><span class="tag t-web">WEB</span>
+  </a>
+
+  <h2>🐍 Python Tools</h2>
+  <a class="proj" href="mint-radar/index.html">
+    <div class="ico" style="background:linear-gradient(135deg,#22c55e,#4ade80)">🐍</div>
+    <div class="info"><h3>Mint Radar</h3><p>Scanner airdrop on-chain (script + panduan)</p></div><span class="tag t-py">PYTHON</span>
+  </a>
+  <a class="proj" href="dashboard/index.html">
+    <div class="ico" style="background:linear-gradient(135deg,#3b82f6,#38bdf8)">🖥️</div>
+    <div class="info"><h3>Server Health Dashboard</h3><p>Pantau CPU/RAM/uptime server siapa pun</p></div><span class="tag t-py">PYTHON</span>
+  </a>
+
+  <h2>🤖 Telegram Bots</h2>
+  <a class="proj" href="https://t.me/kyuza_assistant_bot" target="_blank">
+    <div class="ico" style="background:linear-gradient(135deg,#8b5cf6,#6366f1)">🤖</div>
+    <div class="info"><h3>AI Daily Assistant</h3><p>Catat pengeluaran, reminder, split bill</p></div><span class="tag t-tg">TELEGRAM</span>
+  </a>
+  <a class="proj" href="https://t.me/Kyz_jobs_bot" target="_blank">
+    <div class="ico" style="background:linear-gradient(135deg,#06b6d4,#38bdf8)">💼</div>
+    <div class="info"><h3>Job Scraper</h3><p>Digest lowongan kerja otomatis tiap pagi</p></div><span class="tag t-tg">TELEGRAM</span>
+  </a>
+
+  <footer>© 2026 Kyuza · dibangun bareng AI agent Kyuza 🤖</footer>
+</div>
+</body>
+</html>

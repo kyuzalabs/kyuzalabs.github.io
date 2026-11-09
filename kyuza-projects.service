@@ -1,0 +1,15 @@
+[Unit]
+Description=Kyuza static project server (portfolio)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=agentuser
+WorkingDirectory=/home/agentuser/github-projects
+ExecStart=/usr/bin/python3 -m http.server 8080 --directory /home/agentuser/github-projects --bind 0.0.0.0
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

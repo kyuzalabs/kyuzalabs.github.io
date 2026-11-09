@@ -1,0 +1,16 @@
+[Unit]
+Description=Kyuza AI Assistant Telegram bot (natural-language expense/reminder bot)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=agentuser
+WorkingDirectory=/home/agentuser/github-projects/ai-assistant
+ExecStart=/usr/bin/python3 /home/agentuser/github-projects/ai-assistant/bot.py
+Restart=always
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
