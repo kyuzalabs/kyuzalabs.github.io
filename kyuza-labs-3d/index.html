@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kyuza Labs — Portfolio</title>
+<meta name="description" content="Kyuza Labs — Web3 Builder, Automation & AI. Portfolio interaktif dengan 3D." />
+<meta name="theme-color" content="#050510" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050510;
+    --bg2:#0a0a18;
+    --ink:#f4f4f8;
+    --muted:#9aa0b5;
+    --accent:#ff5c39;
+    --accent2:#ff8a3d;
+    --glass:rgba(255,255,255,0.04);
+    --glass-brd:rgba(255,255,255,0.09);
+    --mono:'JetBrains Mono',monospace;
+    --sans:'Inter',system-ui,sans-serif;
+    --disp:'Space Grotesk',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  ::selection{background:var(--accent);color:#050510}
+
+  /* ---------- preloader ---------- */
+  #preloader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .6s ease, visibility .6s}
+  #preloader.done{opacity:0;visibility:hidden}
+  #preloader .brand{font-family:var(--disp);font-weight:800;font-size:clamp(28px,5vw,48px);letter-spacing:.5px}
+  #preloader .brand span{color:var(--accent)}
+  .progress-track{width:min(280px,60vw);height:2px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden}
+  .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px}
+  #loader-count{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:1px}
+
+  /* ---------- ambient orbs ---------- */
+  .orb{position:fixed;border-radius:50%;filter:blur(120px);opacity:.35;pointer-events:none;z-index:0}
+  .orb.one{width:55vw;height:55vw;background:radial-gradient(circle,#ff5c39 0%,transparent 70%);top:-20vw;left:-15vw}
+  .orb.two{width:45vw;height:45vw;background:radial-gradient(circle,#7b2bff 0%,transparent 70%);bottom:-15vw;right:-12vw;opacity:.25}
+  .orb.three{width:38vw;height:38vw;background:radial-gradient(circle,#00d4ff 0%,transparent 70%);top:40%;left:60%;opacity:.16}
+
+  /* ---------- canvas ---------- */
+  #scene{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+  /* ---------- layout ---------- */
+  .shell{position:relative;z-index:2}
+  section{position:relative;padding:120px 24px;max-width:1100px;margin:0 auto}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+
+  /* nav */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:22px 32px;backdrop-filter:blur(14px);background:rgba(5,5,16,.55);border-bottom:1px solid var(--glass-brd)}
+  nav .logo{font-family:var(--disp);font-weight:800;font-size:19px;letter-spacing:.5px}
+  nav .logo span{color:var(--accent)}
+  nav .links{display:flex;gap:26px}
+  nav .links a{color:var(--muted);text-decoration:none;font-size:14px;transition:color .25s}
+  nav .links a:hover{color:var(--ink)}
+  nav .cta{font-family:var(--mono);font-size:12px;padding:9px 16px;border:1px solid var(--glass-brd);border-radius:99px;color:var(--ink);text-decoration:none;transition:all .25s}
+  nav .cta:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* hero */
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:90px}
+  .hero .eyebrow{display:inline-flex;align-items:center;gap:8px}
+  .hero .dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 12px #22c55e;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .hero h1{font-family:var(--disp);font-weight:800;font-size:clamp(44px,9vw,96px);line-height:.98;letter-spacing:-2px}
+  .hero h1 .grad{background:linear-gradient(90deg,var(--accent),var(--accent2),#ffb84d);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .type-row{font-family:var(--mono);font-size:clamp(16px,2.6vw,24px);color:var(--muted);margin-top:18px;min-height:1.4em}
+  .type-row .cursor{display:inline-block;width:10px;height:1.2em;background:var(--accent);margin-left:4px;vertical-align:middle;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero .sub{max-width:520px;color:var(--muted);font-size:17px;line-height:1.7;margin-top:26px}
+  .hero .actions{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+  .btn{font-family:var(--sans);font-weight:600;font-size:15px;padding:14px 26px;border-radius:99px;text-decoration:none;transition:transform .2s, box-shadow .2s}
+  .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#050510;box-shadow:0 8px 30px rgba(255,92,57,.35)}
+  .btn.ghost{border:1px solid var(--glass-brd);color:var(--ink);background:rgba(16,16,28,.72);backdrop-filter:blur(8px)}
+  .btn:hover{transform:translateY(-2px)}
+
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .stat{padding:28px;border-radius:20px;background:var(--glass);border:1px solid var(--glass-brd);backdrop-filter:blur(8px);transition:transform .3s}
+  .stat:hover{transform:translateY(-4px)}
+  .stat .num{font-family:var(--disp);font-weight:800;font-size:42px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat .lbl{font-family:var(--mono);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:8px}
+
+  /* section titles */
+  .sec-title{font-family:var(--disp);font-weight:800;font-size:clamp(30px,5vw,52px);letter-spacing:-1px;margin-bottom:44px}
+  .sec-title .idx{font-family:var(--mono);font-size:14px;color:var(--accent);margin-right:10px;vertical-align:middle}
+
+  /* project cards */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+  .card{position:relative;padding:30px;border-radius:20px;background:var(--glass);border:1px solid var(--glass-brd);backdrop-filter:blur(8px);text-decoration:none;color:var(--ink);overflow:hidden;transition:transform .3s, border-color .3s;display:flex;flex-direction:column;gap:14px}
+  .card:hover{transform:translateY(-6px);border-color:rgba(255,92,57,.5)}
+  .card .icon{font-size:34px;line-height:1}
+  .card .tag{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent)}
+  .card h3{font-family:var(--disp);font-weight:700;font-size:21px}
+  .card p{color:var(--muted);font-size:14px;line-height:1.6}
+  .card .go{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:auto}
+  .card:hover .go{color:var(--accent)}
+  .cat-label{font-family:var(--mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:44px 0 18px}
+
+  /* contact */
+  .contact{text-align:center}
+  .contact .big{font-family:var(--disp);font-weight:800;font-size:clamp(34px,6vw,64px);letter-spacing:-1px}
+  .contact .big span{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .contact .links{display:flex;gap:14px;justify-content:center;margin-top:34px;flex-wrap:wrap}
+
+  footer{border-top:1px solid var(--glass-brd);padding:36px 24px;text-align:center;color:var(--muted);font-size:13px;position:relative;z-index:2}
+  footer .mono{font-family:var(--mono)}
+
+  @media(max-width:640px){
+    nav .links{display:none}
+    .stats{grid-template-columns:1fr 1fr}
+    section{padding:80px 20px}
+  }
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="brand">KYUZA<span> LABS</span></div>
+  <div class="progress-track"><div class="progress-bar" id="bar"></div></div>
+  <div id="loader-count">Memuat assets... 0%</div>
+</div>
+
+<!-- AMBIENT ORBS -->
+<div class="orb one"></div>
+<div class="orb two"></div>
+<div class="orb three"></div>
+
+<!-- THREE.JS SCENE -->
+<canvas id="scene"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">KYUZA<span> LABS</span></div>
+  <div class="links">
+    <a href="#projects">Proyek</a>
+    <a href="#about">Tentang</a>
+    <a href="#contact">Kontak</a>
+  </div>
+  <a class="cta" href="https://github.com/kyuzalabs" target="_blank" rel="noopener">GITHUB ↗</a>
+</nav>
+
+<div class="shell">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="eyebrow"><span class="dot"></span> OPEN TO WORK</div>
+    <h1>KYUZA <span class="grad">LABS</span></h1>
+    <div class="type-row"><span id="type"></span><span class="cursor"></span></div>
+    <p class="sub">Dari Web3 sampai otomasi AI — gue bangun tools &amp; bot yang beneran jalan. 8 proyek live, dibangun bareng AI agent, dirilis buat dipakai orang.</p>
+    <div class="actions">
+      <a class="btn primary" href="#projects">Lihat Proyek</a>
+      <a class="btn ghost" href="#contact">Hubungi</a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section>
+    <div class="stats">
+      <div class="stat"><div class="num">8</div><div class="lbl">Project live</div></div>
+      <div class="stat"><div class="num">24/7</div><div class="lbl">Bot aktif</div></div>
+      <div class="stat"><div class="num">∞</div><div class="lbl">Ide berikutnya</div></div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="eyebrow">Portfolio</div>
+    <div class="sec-title"><span class="idx">01</span>Proyek</div>
+
+    <div class="cat-label">🌐 Web Apps</div>
+    <div class="grid">
+      <a class="card" href="https://kyuzalabs.github.io/emergency-qr/index.html" target="_blank" rel="noopener">
+        <div class="icon">🆘</div>
+        <div class="tag">WEB</div>
+        <h3>Emergency Info Card</h3>
+        <p>Kartu darurat + QR code, bisa diprint dan dibawa di dompet.</p>
+        <div class="go">Buka ↗</div>
+      </a>
+      <a class="card" href="https://kyuzalabs.github.io/doc-wallet/index.html" target="_blank" rel="noopener">
+        <div class="icon">📁</div>
+        <div class="tag">WEB</div>
+        <h3>Document &amp; Warranty Wallet</h3>
+        <p>Dompet dokumen + reminder expired otomatis.</p>
+        <div class="go">Buka ↗</div>
+      </a>
+      <a class="card" href="https://kyuzalabs.github.io/care-tracker/index.html" target="_blank" rel="noopener">
+        <div class="icon">🐣</div>
+        <div class="tag">WEB</div>
+        <h3>Baby &amp; Pet Care Tracker</h3>
+        <p>Pencatat aktivitas harian bayi / hewan peliharaan.</p>
+        <div class="go">Buka ↗</div>
+      </a>
+      <a class="card" href="https://kyuzalabs.github.io/portfolio-site/index.html" target="_blank" rel="noopener">
+        <div class="icon">👾</div>
+        <div class="tag">WEB</div>
+        <h3>Portfolio Site</h3>
+        <p>Landing page / link-in-bio personal.</p>
+        <div class="go">Buka ↗</div>
+      </a>
+    </div>
+
+    <div class="cat-label">🐍 Python Tools</div>
+    <div class="grid">
+      <a class="card" href="https://kyuzalabs.github.io/mint-radar/index.html" target="_blank" rel="noopener">
+        <div class="icon">🐍</div>
+        <div class="tag">PYTHON</div>
+        <h3>Mint Radar</h3>
+        <p>Scanner airdrop on-chain (script + panduan).</p>
+        <div class="go">Buka ↗</div>
+      </a>
+      <a class="card" href="https://kyuzalabs.github.io/dashboard/index.html" target="_blank" rel="noopener">
+        <div class="icon">🖥️</div>
+        <div class="tag">PYTHON</div>
+        <h3>Server Health Dashboard</h3>
+        <p>Pantau CPU / RAM / uptime server siapa pun.</p>
+        <div class="go">Buka ↗</div>
+      </a>
+    </div>
+
+    <div class="cat-label">🤖 Telegram Bots</div>
+    <div class="grid">
+      <a class="card" href="https://t.me/kyuza_assistant_bot" target="_blank" rel="noopener">
+        <div class="icon">🤖</div>
+        <div class="tag">TELEGRAM</div>
+        <h3>AI Daily Assistant</h3>
+        <p>Catat pengeluaran, reminder, split bill.</p>
+        <div class="go">Buka ↗</div>
+      </a>
+      <a class="card" href="https://t.me/Kyz_jobs_bot" target="_blank" rel="noopener">
+        <div class="icon">💼</div>
+        <div class="tag">TELEGRAM</div>
+        <h3>Job Scraper</h3>
+        <p>Digest lowongan kerja otomatis tiap pagi.</p>
+        <div class="go">Buka ↗</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="eyebrow">About</div>
+    <div class="sec-title"><span class="idx">02</span>Web3 Builder · Automation &amp; AI</div>
+    <p class="sub" style="max-width:600px">Kyuza Labs dibangun bareng AI agent — dari ide jadi produk yang live. Fokus di tool yang nyata dipakai: airdrop scanner, bot Telegram, dashboard monitoring, dan web app sehari-hari.</p>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact">
+    <div class="eyebrow">Contact</div>
+    <div class="big">Ada ide? <span>Bangun bareng.</span></div>
+    <div class="links">
+      <a class="btn primary" href="https://t.me/Kyuzaatzy" target="_blank" rel="noopener">Telegram</a>
+      <a class="btn ghost" href="https://github.com/kyuzalabs" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn ghost" href="https://x.com/kyuzatempest" target="_blank" rel="noopener">X / Twitter</a>
+    </div>
+  </section>
+</div>
+
+<footer>
+  © 2026 Kyuza · <span class="mono">dibangun bareng AI agent Kyuza 🤖</span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+/* ============ PRELOADER ============ */
+const bar = document.getElementById('bar');
+const count = document.getElementById('loader-count');
+let p = 0;
+const loaderTimer = setInterval(() => {
+  p += Math.random() * 14;
+  if (p >= 100) { p = 100; clearInterval(loaderTimer); finishLoad(); }
+  bar.style.width = Math.floor(p) + '%';
+  count.textContent = 'Memuat assets... ' + Math.floor(p) + '%';
+}, 90);
+function finishLoad(){
+  setTimeout(() => { document.getElementById('preloader').classList.add('done'); startReveal(); }, 250);
+}
+
+/* ============ TYPEWRITER ============ */
+const roles = ['Web3 Builder', 'Automation & AI', 'Telegram Bots', 'Creative Developer'];
+const typeEl = document.getElementById('type');
+let ri = 0, ci = 0, deleting = false;
+function tick(){
+  const word = roles[ri];
+  if (!deleting){
+    ci++; typeEl.textContent = word.slice(0, ci);
+    if (ci === word.length){ deleting = true; setTimeout(tick, 1600); return; }
+    setTimeout(tick, 70);
+  } else {
+    ci--; typeEl.textContent = word.slice(0, ci);
+    if (ci === 0){ deleting = false; ri = (ri+1)%roles.length; setTimeout(tick, 300); return; }
+    setTimeout(tick, 40);
+  }
+}
+setTimeout(tick, 900);
+
+/* ============ THREE.JS SCENE ============ */
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, alpha:true, antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 100);
+camera.position.z = 7;
+
+// wireframe icosahedron (crystal)
+const icoGeo = new THREE.IcosahedronGeometry(1.6, 1);
+const icoMat = new THREE.MeshBasicMaterial({ color:0xff5c39, wireframe:true, transparent:true, opacity:0.5 });
+const ico = new THREE.Mesh(icoGeo, icoMat);
+scene.add(ico);
+
+// torus knot ring
+const knotGeo = new THREE.TorusKnotGeometry(2.4, 0.55, 180, 24);
+const knotMat = new THREE.MeshBasicMaterial({ color:0x7b2bff, wireframe:true, transparent:true, opacity:0.32 });
+const knot = new THREE.Mesh(knotGeo, knotMat);
+scene.add(knot);
+
+// particles
+const N = 420;
+const pos = new Float32Array(N*3);
+for (let i=0;i<N;i++){
+  const r = 6 + Math.random()*10;
+  const a = Math.random()*Math.PI*2;
+  const b = Math.acos(2*Math.random()-1);
+  pos[i*3]   = r*Math.sin(b)*Math.cos(a);
+  pos[i*3+1] = r*Math.sin(b)*Math.sin(a);
+  pos[i*3+2] = r*Math.cos(b);
+}
+const pGeo = new THREE.BufferGeometry();
+pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+const pMat = new THREE.PointsMaterial({ color:0xffffff, size:0.03, transparent:true, opacity:0.6 });
+const points = new THREE.Points(pGeo, pMat);
+scene.add(points);
+
+const mouse = { x:0, y:0 };
+addEventListener('mousemove', e => {
+  mouse.x = (e.clientX/innerWidth - 0.5)*2;
+  mouse.y = (e.clientY/innerHeight - 0.5)*2;
+});
+
+let scrollY = 0;
+addEventListener('scroll', () => scrollY = window.scrollY, {passive:true});
+
+function animate(){
+  requestAnimationFrame(animate);
+  const t = performance.now()*0.0005;
+  ico.rotation.x = t*0.6 + mouse.y*0.4;
+  ico.rotation.y = t*0.8 + mouse.x*0.4;
+  knot.rotation.x = -t*0.4 + mouse.y*0.2;
+  knot.rotation.y = t*0.5 + mouse.x*0.2;
+  points.rotation.y = t*0.06;
+  points.rotation.x = t*0.03;
+  camera.position.x = mouse.x * 0.6;
+  camera.position.y = -mouse.y * 0.4 - scrollY*0.002;
+  camera.lookAt(0,0,0);
+  renderer.render(scene, camera);
+}
+animate();
+addEventListener('resize', () => {
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+/* ============ SCROLL REVEAL ============ */
+gsap.registerPlugin(ScrollTrigger);
+function startReveal(){
+  gsap.utils.toArray('.card, .stat').forEach(el => {
+    gsap.from(el, {
+      y: 40, opacity: 0, duration: 0.8, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%' }
+    });
+  });
+  gsap.utils.toArray('.sec-title, .eyebrow, .cat-label').forEach(el => {
+    gsap.from(el, {
+      y: 24, opacity: 0, duration: 0.7, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 90%' }
+    });
+  });
+}
+</script>
+</body>
+</html>
