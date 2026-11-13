@@ -465,6 +465,7 @@ setTimeout(tick, 1000);
   let renderer, scene, camera, group, cardFront, cardBack, strap, clip;
   let mouse = { x:0, y:0 };
   let target = { rx:0.12, rz:0, ry:0 };
+  let flipped = false;
 
   function size(){
     const w = stage.clientWidth, h = stage.clientHeight;
@@ -662,6 +663,9 @@ setTimeout(tick, 1000);
       mouse.y = ((e.clientY - r.top)/r.height - 0.5)*2;
     });
     stage.addEventListener('mouseleave', ()=>{ mouse.x=0; mouse.y=0; });
+    // click / tap to flip the card (show the QR back side)
+    canvas.addEventListener('click', ()=>{ flipped = !flipped; });
+    canvas.style.cursor = 'pointer';
     animate();
   }
 
@@ -669,7 +673,7 @@ setTimeout(tick, 1000);
     requestAnimationFrame(animate);
     target.rx = 0.12 + mouse.y*0.18;
     target.rz = mouse.x*0.28;
-    target.ry = mouse.x*0.12;
+    target.ry = (flipped ? Math.PI : 0) + mouse.x*0.12;
     group.rotation.x += (target.rx - group.rotation.x)*0.08;
     group.rotation.z += (target.rz - group.rotation.z)*0.08;
     group.rotation.y += (target.ry - group.rotation.y)*0.08;
