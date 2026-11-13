@@ -66,6 +66,8 @@
   nav .links a:hover{color:var(--ink)}
   nav .cta{font-family:var(--mono);font-size:12px;padding:9px 16px;border:1px solid rgba(255,255,255,.14);border-radius:99px;color:var(--ink);text-decoration:none;transition:all .25s}
   nav .cta:hover{border-color:var(--accent2);color:var(--accent2)}
+  nav .sound-btn{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:var(--ink);font-size:15px;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center}
+  nav .sound-btn:hover{border-color:var(--accent2);transform:scale(1.06)}
 
   /* hero */
   .hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:20px;padding-top:100px}
@@ -139,9 +141,10 @@
 
   /* contact */
   .contact-panel{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
-  .contact form{display:flex;flex-direction:column;gap:16px}
-  .contact input,.contact textarea{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:var(--ink);font-family:var(--sans);font-size:15px;resize:vertical}
-  .contact input:focus,.contact textarea:focus{outline:none;border-color:var(--accent2)}
+  #contact form{display:flex;flex-direction:column;gap:16px}
+  #contact input,#contact textarea{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:var(--ink);font-family:var(--sans);font-size:15px;resize:vertical}
+  #contact input::placeholder,#contact textarea::placeholder{color:var(--muted2)}
+  #contact input:focus,#contact textarea:focus{outline:none;border-color:var(--accent2)}
   .contact .hint{color:var(--muted);font-size:14px;line-height:1.7}
 
   /* guestbook */
@@ -209,6 +212,7 @@
     <a href="#portfolio">Portfolio</a>
     <a href="#contact">Contact</a>
   </div>
+  <button class="sound-btn" id="soundBtn" onclick="Sound.toggle()" title="Suara" aria-label="Toggle sound">🔊</button>
   <a class="cta" href="https://github.com/kyuzalabs" target="_blank" rel="noopener">GITHUB ↗</a>
 </nav>
 
@@ -458,6 +462,53 @@ function tick(){
 }
 setTimeout(tick, 1000);
 
+/* ================= SOUND (UI blips + mute toggle) ================= */
+window.Sound = (() => {
+  let ctx = null;
+  let enabled = localStorage.getItem('kyuza-sound') !== 'off';
+  function ensure(){
+    if (!ctx){ try { ctx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e){} }
+    if (ctx && ctx.state === 'suspended') ctx.resume();
+  }
+  function blip(freq, dur, type, gain){
+    if (!enabled || !ctx) return;
+    const t = ctx.currentTime;
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(gain, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(t); o.stop(t + dur);
+  }
+  const api = {
+    hover(){ ensure(); blip(760, 0.04, 'sine', 0.025); },
+    click(){ ensure(); blip(440, 0.07, 'triangle', 0.05); },
+    flip(){ ensure(); blip(300, 0.10, 'sine', 0.045); setTimeout(()=>blip(560, 0.08, 'sine', 0.035), 70); },
+    get enabled(){ return enabled; },
+    toggle(){
+      ensure();
+      enabled = !enabled;
+      localStorage.setItem('kyuza-sound', enabled ? 'on' : 'off');
+      const b = document.getElementById('soundBtn');
+      if (b) b.textContent = enabled ? '🔊' : '🔇';
+      if (enabled) blip(660, 0.06, 'sine', 0.04);
+      return enabled;
+    },
+    sync(){ const b = document.getElementById('soundBtn'); if (b) b.textContent = enabled ? '🔊' : '🔇'; }
+  };
+  return api;
+})();
+// wire UI sounds via delegation (works for dynamically-rendered cards too)
+document.addEventListener('click', e => {
+  const t = e.target.closest('a, button, .tab, .card .go, .back-top');
+  if (t) Sound.click();
+});
+document.addEventListener('mouseover', e => {
+  const t = e.target.closest('nav .links a, nav .cta, .card');
+  if (t) Sound.hover();
+}, { passive:true });
+Sound.sync();
+
 /* ================= 3D LANYARD ================= */
 (function(){
   const canvas = document.getElementById('lanyard');
@@ -466,6 +517,8 @@ setTimeout(tick, 1000);
   let mouse = { x:0, y:0 };
   let target = { rx:0.12, rz:0, ry:0 };
   let flipped = false;
+  let introStart = 0;
+  let sway = 0, swayVel = 0;
 
   function size(){
     const w = stage.clientWidth, h = stage.clientHeight;
@@ -620,40 +673,40 @@ setTimeout(tick, 1000);
     renderer.setPixelRatio(Math.min(devicePixelRatio,2));
     renderer.shadowMap.enabled = false;
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-    camera.position.set(0, 0, 6.2);
+    camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+    camera.position.set(0, 0, 5.5);
 
-    const light = new THREE.DirectionalLight(0xffffff, 1.6); light.position.set(3,4,5); scene.add(light);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+    const light = new THREE.DirectionalLight(0xffffff, 1.7); light.position.set(2,3,6); scene.add(light);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.85));
 
     group = new THREE.Group(); scene.add(group);
 
     // card (front + back) — planes offset slightly outside the edge box to avoid z-fighting
-    const CW=1.6, CH=2.47, thick=0.02;
-    const frontMat = new THREE.MeshStandardMaterial({ map:frontTex, roughness:0.5 });
+    const CW=2.0, CH=3.0, thick=0.03;
+    const frontMat = new THREE.MeshStandardMaterial({ map:frontTex, roughness:0.32, metalness:0.06 });
     cardFront = new THREE.Mesh(new THREE.PlaneGeometry(CW,CH), frontMat);
     cardFront.position.z = thick/2 + 0.004;
-    const backMat = new THREE.MeshStandardMaterial({ map:backTex, roughness:0.5 });
+    const backMat = new THREE.MeshStandardMaterial({ map:backTex, roughness:0.32, metalness:0.06 });
     cardBack = new THREE.Mesh(new THREE.PlaneGeometry(CW,CH), backMat);
     cardBack.rotation.y = Math.PI;
     cardBack.position.z = -thick/2 - 0.004;
 
-    // card body (edge)
-    const edge = new THREE.Mesh(new THREE.BoxGeometry(CW,CH,thick), new THREE.MeshStandardMaterial({ color:0xddd8c4, roughness:0.6 }));
+    // card body (edge) — glossy white/cream card
+    const edge = new THREE.Mesh(new THREE.BoxGeometry(CW,CH,thick), new THREE.MeshStandardMaterial({ color:0xf4efe2, roughness:0.4, metalness:0.08 }));
     edge.position.z = 0;
 
-    // clip
-    clip = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,0.12,16), new THREE.MeshStandardMaterial({ color:0x2c67ed, metalness:0.5, roughness:0.3 }));
-    clip.position.y = CH/2 + 0.02;
-
-    // strap (lanyard loop)
-    strap = new THREE.Mesh(new THREE.TorusGeometry(1.05, 0.045, 14, 60, Math.PI*1.35), new THREE.MeshStandardMaterial({ color:0x2c67ed, roughness:0.6 }));
-    strap.rotation.z = Math.PI;
-    strap.position.y = CH/2 + 1.05;
+    // metal clip (silver) at top centre + black strap going up off-screen (Alfari: strapColor #111111, metal silver)
+    clip = new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.11,16), new THREE.MeshStandardMaterial({ color:0xc9ccd4, metalness:0.9, roughness:0.25 }));
+    clip.rotation.x = Math.PI/2;
+    clip.position.set(0, CH/2 + 0.02, 0);
+    const strapH = 3.4;
+    strap = new THREE.Mesh(new THREE.BoxGeometry(0.07, strapH, 0.02), new THREE.MeshBasicMaterial({ color:0x141414 }));
+    strap.position.set(0, CH/2 + 0.02 + strapH/2, 0);
 
     group.add(cardFront, cardBack, edge, clip, strap);
-    group.position.y = 0.05;
-    group.rotation.x = 0.12;
+
+    // hangs from the strap (anchor off-screen top), card dangles centre
+    group.position.set(0, -0.12, 0);
 
     size();
     window.addEventListener('resize', size);
@@ -664,21 +717,37 @@ setTimeout(tick, 1000);
     });
     stage.addEventListener('mouseleave', ()=>{ mouse.x=0; mouse.y=0; });
     // click / tap to flip the card (show the QR back side)
-    canvas.addEventListener('click', ()=>{ flipped = !flipped; });
+    canvas.addEventListener('click', ()=>{ flipped = !flipped; if (window.Sound) Sound.flip(); });
     canvas.style.cursor = 'pointer';
+    introStart = performance.now();
+    window.__lanyard = { renderer, scene, camera, group, cardFront, cardBack, get flip(){return flipped;}, set flip(v){flipped=v;} };
     animate();
   }
 
   function animate(){
     requestAnimationFrame(animate);
-    target.rx = 0.12 + mouse.y*0.18;
-    target.rz = mouse.x*0.28;
-    target.ry = (flipped ? Math.PI : 0) + mouse.x*0.12;
+    const t = performance.now();
+    // intro: card swings/slides in from the right (Alfari: position.x = width*1.15)
+    const ip = Math.min(1, (t - introStart)/1600);
+    const ie = 1 - Math.pow(1-ip, 4);           // easeOutQuart
+    const ix = 4.6 * (1 - ie);
+
+    // idle pendulum sway (breeze) + mouse influence — physics-like, not a static tilt
+    const breeze = Math.sin(t*0.0012)*0.05 + Math.sin(t*0.00063)*0.03;
+    swayVel += (breeze + mouse.x*0.16 - sway)*0.045;
+    swayVel *= 0.96;
+    sway += swayVel;
+
+    target.rx = 0.06 + mouse.y*0.10;
+    target.ry = (flipped ? Math.PI : 0) + mouse.x*0.14;
     group.rotation.x += (target.rx - group.rotation.x)*0.08;
-    group.rotation.z += (target.rz - group.rotation.z)*0.08;
-    group.rotation.y += (target.ry - group.rotation.y)*0.08;
-    const s = 1 + Math.sin(performance.now()*0.0012)*0.012;
+    group.rotation.y += (target.ry - group.rotation.y)*0.10;
+    group.rotation.z = sway;
+
+    const s = (0.94 + 0.06*ie) * (1 + Math.sin(t*0.0009)*0.006);
     group.scale.set(s,s,s);
+    group.position.x = ix + mouse.x*0.05;
+    group.position.y = -0.12 - mouse.y*0.05;
     renderer.render(scene,camera);
   }
 
