@@ -19,14 +19,15 @@
 .lanyard-stage{ position:absolute; top:-30px; right:-60px; width:360px; height:560px; pointer-events:auto; }
 .lanyard-float{ position:absolute; inset:0; perspective:1100px; transform-origin:top center; animation:card-float 7s ease-in-out infinite; }
 .lanyard-band{ position:absolute; top:-120px; left:50%; transform:translateX(-50%); width:22px; height:180px; background:linear-gradient(180deg,#0a0a0a,#1c1c1c 60%,#0a0a0a); border-radius:6px; z-index:0; }
-.lanyard-band::after{ content:""; position:absolute; top:-8px; left:50%; transform:translateX(-50%); width:34px; height:26px; background:linear-gradient(180deg,#e8e8e8,#9a9a9a 55%,#5c5c5c); border-radius:6px; box-shadow:0 2px 4px #00000066; }
+.lanyard-band-text{ position:absolute; top:8px; left:50%; transform:translateX(-50%); writing-mode:vertical-rl; color:#ffffff59; font-size:8px; font-weight:700; letter-spacing:.5em; white-space:nowrap; font-family:'Inter',sans-serif; }
+.lanyard-band::after{ content:""; position:absolute; bottom:-6px; left:50%; transform:translateX(-50%); width:34px; height:26px; background:linear-gradient(180deg,#e8e8e8,#9a9a9a 55%,#5c5c5c); border-radius:6px; box-shadow:0 2px 4px #00000066; }
 .card3d{ position:absolute; top:60px; left:0; width:320px; height:494px; transform-style:preserve-3d; transition:transform .9s cubic-bezier(.2,.75,.25,1); cursor:pointer; }
 .card3d.is-flipped{ transform:rotateY(180deg); }
 .card-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden; border-radius:10px; box-shadow:0 24px 60px #00000080, 0 4px 14px #00000055; }
 .card-back{ transform:rotateY(180deg); }
 
 /* ===== CARD FRONT (cream editorial ID card) ===== */
-.card-front{ background:#E9E4D6; background-image:radial-gradient(circle at 1px 1px,#C9C3AE 1px,transparent 1.6px); background-size:8px 8px; }
+.card-front{ background:#E9E4D6; background-image:radial-gradient(circle at 1px 1px,#C9C3AE 1px,transparent 1.6px),repeating-radial-gradient(circle at 28% 22%,#D8D2BE 0 1px,transparent 1px 30px); background-size:8px 8px,100% 100%; }
 .cf-rule{ position:absolute; background:#1E2B4F; }
 .cf-vl{ left:3.5%; top:0; bottom:0; width:2px; }
 .cf-vr{ right:3.5%; top:0; bottom:0; width:2px; }
@@ -84,8 +85,9 @@
 
 @media (max-width:1024px){ .lanyard-stage{ transform:scale(.82); } }
 @media (max-width:767px){
-  .lanyard-stage{ top:0; right:auto; left:50%; transform:translateX(-50%); width:360px; height:540px; }
-  .lanyard-float{ animation:none; transform:rotate(-3deg); }
+  .lanyard-stage{ top:155px; right:auto; left:50%; transform:translateX(-50%) scale(0.78); transform-origin:top center; width:320px; height:494px; }
+  .lanyard-float{ animation:none; transform:none; }
+  .lanyard-band{ top:-200px; height:260px; }
 }
 </style>
 </head>
@@ -159,7 +161,7 @@
             <div class="lanyard">
               <div class="lanyard-stage" id="lanyardStage">
                 <div class="lanyard-float">
-                  <div class="lanyard-band"></div>
+                  <div class="lanyard-band"><span class="lanyard-band-text">KYUZA</span></div>
                   <div class="card3d" id="card3d">
                   <div class="card-face card-front">
                     <div class="cf-rule cf-vl"></div><div class="cf-rule cf-vr"></div>
