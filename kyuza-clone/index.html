@@ -130,10 +130,11 @@
             </h2>
             <a class="about-action about-action-primary" href="#Contact"><span>Hubungi Saya</span></a>
           </div>
-          <div class="about-portrait-stage">
+          <div class="about-portrait-stage" id="aboutPortraitStage">
             <div class="about-portrait-glow"></div>
             <div class="about-portrait">
-              <img class="skeleton-image about-person-image" src="assets/killua.jpg" alt="Kyuza">
+              <img class="skeleton-image about-person-image" src="assets/kyuza_alfari_replace.png" alt="Kyuza">
+              <img class="skeleton-image about-spider-image" src="assets/kyuza_spidey_replace.png" alt="" aria-hidden="true">
             </div>
             <span class="about-portrait-orbit about-portrait-orbit-one"></span>
             <span class="about-portrait-orbit about-portrait-orbit-two"></span>
@@ -422,6 +423,44 @@
       }
       setTimeout(tick, del ? 45 : 90);
     })();
+  }
+
+  // ---- Spider transition (About portrait) ----
+  var aboutStage = document.getElementById('aboutPortraitStage');
+  if(aboutStage){
+    var portraitEl = aboutStage.querySelector('.about-portrait');
+    var spiderTimeout = null;
+    if('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          aboutStage.classList.toggle('is-in-view', en.isIntersecting);
+          if(!en.isIntersecting){
+            clearTimeout(spiderTimeout);
+            aboutStage.classList.remove('spider-hovered');
+            delete aboutStage.dataset.spiderVisible;
+          }
+        });
+      }, { threshold: 0.2 });
+      io.observe(aboutStage);
+    } else {
+      aboutStage.classList.add('is-in-view');
+    }
+    aboutStage.addEventListener('pointermove', function(e){
+      if(!portraitEl) return;
+      clearTimeout(spiderTimeout);
+      var r = portraitEl.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width * 100;
+      var y = (e.clientY - r.top) / r.height * 100;
+      aboutStage.style.setProperty('--hover-x', x + '%');
+      aboutStage.style.setProperty('--hover-y', y + '%');
+      aboutStage.classList.add('spider-hovered');
+      aboutStage.dataset.spiderVisible = 'true';
+    });
+    aboutStage.addEventListener('pointerleave', function(){
+      delete aboutStage.dataset.spiderVisible;
+      clearTimeout(spiderTimeout);
+      spiderTimeout = setTimeout(function(){ aboutStage.classList.remove('spider-hovered'); }, 7000);
+    });
   }
 
   var tabs = document.querySelectorAll('.portfolio-tab-btn');
