@@ -16,7 +16,8 @@
 /* 3D lanyard card (DOM, replaces THREE.js canvas) */
 .lanyard-viewport{ position:absolute; inset:0; z-index:4; pointer-events:none; }
 .lanyard{ touch-action:none; width:100%; height:100%; position:relative; overflow:hidden; pointer-events:none; }
-.lanyard-stage{ position:absolute; top:-30px; right:-60px; width:360px; height:560px; perspective:1100px; pointer-events:auto; transform-origin:top center; animation:card-float 7s ease-in-out infinite; }
+.lanyard-stage{ position:absolute; top:-30px; right:-60px; width:360px; height:560px; pointer-events:auto; }
+.lanyard-float{ position:absolute; inset:0; perspective:1100px; transform-origin:top center; animation:card-float 7s ease-in-out infinite; }
 .lanyard-band{ position:absolute; top:-120px; left:50%; transform:translateX(-50%); width:22px; height:180px; background:linear-gradient(180deg,#0a0a0a,#1c1c1c 60%,#0a0a0a); border-radius:6px; z-index:0; }
 .lanyard-band::after{ content:""; position:absolute; top:-8px; left:50%; transform:translateX(-50%); width:34px; height:26px; background:linear-gradient(180deg,#e8e8e8,#9a9a9a 55%,#5c5c5c); border-radius:6px; box-shadow:0 2px 4px #00000066; }
 .card3d{ position:absolute; top:60px; left:0; width:320px; height:494px; transform-style:preserve-3d; transition:transform .9s cubic-bezier(.2,.75,.25,1); cursor:pointer; }
@@ -82,7 +83,10 @@
 @keyframes card-float{ 0%,100%{ transform:rotate(-6deg) translateY(0); } 50%{ transform:rotate(-2deg) translateY(-12px); } }
 
 @media (max-width:1024px){ .lanyard-stage{ transform:scale(.82); } }
-@media (max-width:768px){ .lanyard-stage{ display:none; } }
+@media (max-width:767px){
+  .lanyard-stage{ top:0; right:auto; left:50%; transform:translateX(-50%); width:360px; height:540px; }
+  .lanyard-float{ animation:none; transform:rotate(-3deg); }
+}
 </style>
 </head>
 <body>
@@ -91,6 +95,9 @@
     <span class="gsap-ambient-orb gsap-ambient-orb-one"></span>
     <span class="gsap-ambient-orb gsap-ambient-orb-two"></span>
     <span class="gsap-ambient-orb gsap-ambient-orb-three"></span>
+  </div>
+  <div class="particles-container particles-background">
+    <canvas class="particles-canvas" id="particlesCanvas"></canvas>
   </div>
   <div class="meteor-background">
     <span class="meteor"></span><span class="meteor"></span><span class="meteor"></span>
@@ -110,10 +117,6 @@
     <header class="navbar-root" id="navbar">
       <div class="glass-surface glass-surface--fallback navbar-container">
         <div class="glass-surface__content">
-          <a class="navbar-brand" href="#Home" aria-label="Kyuza">
-            <span class="navbar-logo-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4z" stroke="#60a5fa" stroke-width="2"/><path d="M8 16V8l8 8V8" stroke="#60a5fa" stroke-width="2"/></svg><span class="navbar-logo-dot"></span></span>
-            <span class="navbar-brand-name">Kyuza.</span>
-          </a>
           <nav class="navbar-links">
             <a class="navbar-link-item is-active" href="#Home"><span>Home</span><span class="navbar-active-pill"></span></a>
             <a class="navbar-link-item" href="#About"><span>About</span></a>
@@ -123,7 +126,6 @@
           <span class="navbar-mobile-brand">Kyuza.</span>
           <div class="navbar-actions">
             <span class="navbar-actions-divider"></span>
-            <a class="navbar-cta-btn" href="#Contact">Hubungi Saya</a>
             <button class="navbar-icon-btn" id="soundBtn" aria-label="Suara" title="Suara">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>
             </button>
@@ -152,12 +154,13 @@
 
     <main>
       <section id="Home" class="hero-root-section">
-        <section class="lanyard-card-container" aria-hidden="true">
+        <section class="lanyard-card-container is-mobile" aria-hidden="true">
           <div class="lanyard-viewport">
             <div class="lanyard">
               <div class="lanyard-stage" id="lanyardStage">
-                <div class="lanyard-band"></div>
-                <div class="card3d" id="card3d">
+                <div class="lanyard-float">
+                  <div class="lanyard-band"></div>
+                  <div class="card3d" id="card3d">
                   <div class="card-face card-front">
                     <div class="cf-rule cf-vl"></div><div class="cf-rule cf-vr"></div>
                     <div class="cf-rule cf-h1"></div><div class="cf-rule cf-h2"></div>
@@ -192,6 +195,7 @@
                     <div class="cb-banner"><span>WEB3 BUILDER</span></div>
                     <div class="cb-nameplate"><b>KYUZA</b><i>— Web3 Builder —</i></div>
                   </div>
+                </div>
                 </div>
               </div>
             </div>
@@ -474,10 +478,12 @@
   "use strict";
   var pre = document.getElementById('preloader');
   var num = document.getElementById('preloaderNum');
+  var bar = document.getElementById('preloaderBar');
   var n = 0;
   var iv = setInterval(function(){
     n = Math.min(100, n + Math.floor(Math.random()*9)+2);
     if(num) num.firstChild.nodeValue = n;
+    if(bar) bar.style.transform = 'scaleX(' + (n/100) + ')';
     if(n >= 100){
       clearInterval(iv);
       setTimeout(function(){ pre && pre.classList.add('is-leaving'); }, 250);
@@ -577,6 +583,52 @@
   }
   if(soundBtn){ soundBtn.addEventListener('click', function(){ soundOn = !soundOn; blip(); }); }
   document.addEventListener('click', function(e){ if(e.target.closest('a,button')) blip(); });
+
+  // ---- Particles background ----
+  var pc = document.getElementById('particlesCanvas');
+  if(pc){
+    var pctx = pc.getContext('2d');
+    var parts = [];
+    function sizeCanvas(){
+      pc.width = window.innerWidth;
+      pc.height = window.innerHeight;
+    }
+    sizeCanvas();
+    for(var i=0;i<60;i++){
+      parts.push({
+        x: Math.random()*pc.width,
+        y: Math.random()*pc.height,
+        r: Math.random()*1.6+0.4,
+        vx: (Math.random()-0.5)*0.3,
+        vy: (Math.random()-0.5)*0.3,
+        a: Math.random()*0.5+0.1
+      });
+    }
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function drawParticles(){
+      pctx.clearRect(0,0,pc.width,pc.height);
+      for(var i=0;i<parts.length;i++){
+        var p = parts[i];
+        p.x += p.vx; p.y += p.vy;
+        if(p.x<0||p.x>pc.width) p.vx*=-1;
+        if(p.y<0||p.y>pc.height) p.vy*=-1;
+        pctx.beginPath();
+        pctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        pctx.fillStyle = 'rgba(120,170,255,'+p.a+')';
+        pctx.fill();
+      }
+      if(!reduced) requestAnimationFrame(drawParticles);
+    }
+    if(reduced){
+      for(var i=0;i<parts.length;i++){
+        pctx.beginPath(); pctx.arc(parts[i].x,parts[i].y,parts[i].r,0,Math.PI*2);
+        pctx.fillStyle='rgba(120,170,255,'+parts[i].a+')'; pctx.fill();
+      }
+    } else {
+      drawParticles();
+    }
+    window.addEventListener('resize', function(){ sizeCanvas(); });
+  }
 })();
 </script>
 </body>
