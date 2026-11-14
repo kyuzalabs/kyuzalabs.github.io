@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Kasir{% endblock %}
+{% block body %}
+<div class="wrap">
+  <div class="revenue">💵 Pendapatan: <b>Rp {{ revenue }}</b></div>
+
+  <h2>Meja</h2>
+  <div class="tables">
+    {% for t in tables %}
+      {% if t.status == 'free' %}
+      <form method="post" action="{{ url_for('open_table', table_id=t.id) }}">
+        <button class="table free" type="submit">{{ t.name }}<br><span class="muted">Kosong</span></button>
+      </form>
+      {% else %}
+      <a class="table busy" href="{{ url_for('order', order_id=t.order_id) }}">
+        {{ t.name }}<br><span>Terisi</span>
+      </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <h2>Menu</h2>
+  <div class="menu">
+    {% for m in menu %}
+      <div class="chip">{{ m.name }} <span class="muted">· Rp {{ m.price }}</span></div>
+    {% endfor %}
+  </div>
+
+  <h2>Order berjalan</h2>
+  {% for o in active_orders %}
+    <a class="roworder" href="{{ url_for('order', order_id=o.id) }}">
+      <span>#{{ o.id }} — {{ o.table_name or '-' }}</span>
+      <span class="badge {{ o.status }}">{{ o.status }}</span>
+      <span class="muted">Rp {{ o.total }}</span>
+    </a>
+  {% else %}
+    <p class="muted">Belum ada order aktif.</p>
+  {% endfor %}
+</div>
+{% endblock %}

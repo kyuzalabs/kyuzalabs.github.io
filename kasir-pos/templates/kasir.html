@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Kasir — KyzuKasir{% endblock %}
+{% block content %}
+
+<div class="tables-bar">
+  {% for t in tables %}
+    {% set oid = order_by_table.get(t.id) %}
+    {% if oid %}
+      <a href="/kasir?order={{ oid }}" class="table-btn busy">{{ t.name }}</a>
+    {% else %}
+      <form method="POST" action="/kasir/table/{{ t.id }}/open">
+        <button type="submit" class="table-btn free">{{ t.name }}</button>
+      </form>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<div class="kasir-layout">
+  <div class="menu-pane">
+    <div class="chips">
+      <a href="/kasir{{ ('?order=' ~ order.id) if order else '' }}" class="chip {{ 'active' if not cat_id }}">Semua</a>
+      {% for c in categories %}
+        <a href="/kasir?cat={{ c.id }}{{ ('&order=' ~ order.id) if order else '' }}" class="chip {{ 'active' if cat_id == c.id }}">{{ c.emoji }} {{ c.name }}</a>
+      {% endfor %}
+    </div>
+
+    {% set can_add = order and order.status == 'active' %}
+    {% if not order %}
+      <div class="hint-banner">👆 Pilih meja dulu untuk mulai pesanan.</div>
+    {% elif not can_add %}
+      <div class="hint-banner">Pesanan status <b>{{ order.status }}</b> — tidak bisa tambah item lagi.</div>
+    {% endif %}
+
+    <div class="product-grid">
+      {% for p in products %}
+        <form method="POST" action="{{ ('/order/' ~ order.id ~ '/add') if can_add else '#' }}">
+          <button type="submit" class="product-btn" {% if not can_add %}disabled{% endif %}>
+            <span class="p-emoji">{{ p.emoji or '🍽️' }}</span>
+            <span class="p-name">{{ p.name }}</span>
+            <span class="p-price">{{ p.price_idr|idr }}</span>
+          </button>
+        </form>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="cart-pane">
+    {% if order %}
+    <div class="cart-panel">
+      <div class="cart-head">
+        <span class="cart-table">🪑 {{ table_name(order.table_id) }}</span>
+        <span class="badge {{ order.status }}">{{ order.status }}</span>
+      </div>
+      <div class="cart-items">
+        {% for it in items %}
+        <div class="cart-line">
+          <span class="ci-qty">{{ it.qty }}×</span>
+          <span class="ci-name">{{ it.name }}</span>
+          <span class="ci-price">{{ (it.qty * it.price_idr)|idr }}</span>
+          {% if order.status == 'active' %}
+          <form method="POST" action="/order/{{ order.id }}/item/{{ it.id }}/remove">
+            <button class="ci-x" title="Hapus">✕</button>
+          </form>
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% if not items %}
+        <p class="muted">Belum ada item.</p>
+        {% endif %}
+      </div>
+      <div class="cart-total"><span>Total</span><span>{{ total|idr }}</span></div>
+      {% if order.status == 'active' %}
+        <a href="/order/{{ order.id }}/pay" class="btn btn-primary btn-block">💳 Bayar</a>
+        <form method="POST" action="/order/{{ order.id }}/cancel">
+          <button class="btn btn-ghost btn-block mt-8">Batalkan Pesanan</button>
+        </form>
+      {% else %}
+        <a href="/order/{{ order.id }}/receipt" class="btn btn-secondary btn-block">🧾 Lihat Struk</a>
+        <form method="POST" action="/order/{{ order.id }}/done">
+          <button class="btn btn-primary btn-block mt-8">✅ Selesai & Bebaskan Meja</button>
+        </form>
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="cart-panel cart-empty">
+      <span class="emoji">🛒</span>
+      <p>Pilih meja untuk mulai pesanan.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

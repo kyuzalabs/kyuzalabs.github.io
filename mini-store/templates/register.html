@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Daftar — Kyuza Shop{% endblock %}
+{% block content %}
+
+<div class="auth-wrap">
+  <div class="card auth-card">
+    <h1>Bikin akun</h1>
+    <p class="page-sub">Gratis dan cepat. Langsung aja.</p>
+
+    <form method="POST" action="/register" class="mt-16">
+      <div class="field">
+        <label class="label" for="name">Nama</label>
+        <input class="input" type="text" id="name" name="name" placeholder="Nama kamu" required>
+      </div>
+      <div class="field">
+        <label class="label" for="email">Email</label>
+        <input class="input" type="email" id="email" name="email" placeholder="kamu@email.com" required>
+      </div>
+      <div class="field">
+        <label class="label" for="password">Password</label>
+        <input class="input" type="password" id="password" name="password" placeholder="Min. 6 karakter" required>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Daftar</button>
+    </form>
+
+    <p class="auth-alt">Sudah punya akun? <a href="/login">Masuk di sini</a></p>
+  </div>
+</div>
+
+{% endblock %}

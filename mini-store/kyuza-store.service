@@ -1,0 +1,14 @@
+[Unit]
+Description=Kyuza Shop (mini e-commerce Flask)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/agentuser/github-projects/mini-store
+EnvironmentFile=/home/agentuser/github-projects/mini-store/store.env
+ExecStart=/home/agentuser/github-projects/mini-store/.venv/bin/gunicorn --preload -w 2 --threads 4 -b 0.0.0.0:8500 app:app
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

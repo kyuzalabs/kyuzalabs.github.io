@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Kelola Menu{% endblock %}
+{% block body %}
+<div class="wrap">
+  <h2>Kelola Menu</h2>
+  <form method="post" class="addmenu">
+    <input name="name" placeholder="Nama item" required>
+    <input name="price" type="number" placeholder="Harga (Rp)" required>
+    <input name="category" placeholder="Kategori (mis. Kopi)">
+    <button class="btn" type="submit">Tambah</button>
+  </form>
+  <table class="lines">
+    <tr><th>Nama</th><th>Kategori</th><th>Harga</th><th></th></tr>
+    {% for it in items %}
+    <tr>
+      <td>{{ it.name }}</td>
+      <td>{{ it.category }}</td>
+      <td>Rp {{ it.price }}</td>
+      <td>
+        <form method="post" action="{{ url_for('delete_menu', item_id=it.id) }}">
+          <button class="del" type="submit">Hapus</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

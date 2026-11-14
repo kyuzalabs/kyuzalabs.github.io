@@ -1,0 +1,36 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h1 class="page-title">🍽️ Kelola Menu</h1>
+
+<div class="card mt-16">
+  <h3 class="panel-title">Tambah Menu</h3>
+  <form method="POST" action="/admin/menu/add" class="add-row">
+    <input class="input" name="name" placeholder="Nama menu" required>
+    <input class="input" name="price_idr" type="number" placeholder="Harga (Rp)" required>
+    <select class="select" name="category_id">
+      {% for c in categories %}<option value="{{ c.id }}">{{ c.emoji }} {{ c.name }}</option>{% endfor %}
+    </select>
+    <input class="input" name="emoji" placeholder="Emoji" maxlength="4" style="max-width:100px;">
+    <button class="btn btn-primary">Tambah</button>
+  </form>
+</div>
+
+<div class="table-wrap mt-16">
+  <table class="table">
+    <tr><th>Menu</th><th>Kategori</th><th>Harga</th><th>Status</th><th></th></tr>
+    {% for p in products %}
+    <tr>
+      <td>{{ p.emoji }} {{ p.name }}</td>
+      <td>{{ p.cat_emoji }} {{ p.cat_name }}</td>
+      <td>{{ p.price_idr|idr }}</td>
+      <td><span class="badge {{ 'paid' if p.active else 'cancelled' }}">{{ 'Aktif' if p.active else 'Nonaktif' }}</span></td>
+      <td>
+        <form method="POST" action="/admin/menu/{{ p.id }}/toggle">
+          <button class="btn btn-ghost btn-sm">{{ 'Nonaktifkan' if p.active else 'Aktifkan' }}</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

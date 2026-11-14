@@ -26,60 +26,8 @@
 .card-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden; border-radius:10px; box-shadow:0 24px 60px #00000080, 0 4px 14px #00000055; }
 .card-back{ transform:rotateY(180deg); }
 
-/* ===== CARD FRONT (cream editorial ID card) ===== */
-.card-front{ background:#E9E4D6; background-image:radial-gradient(circle at 1px 1px,#C9C3AE 1px,transparent 1.6px),repeating-radial-gradient(circle at 28% 22%,#D8D2BE 0 1px,transparent 1px 30px); background-size:8px 8px,100% 100%; }
-.cf-rule{ position:absolute; background:#1E2B4F; }
-.cf-vl{ left:3.5%; top:0; bottom:0; width:2px; }
-.cf-vr{ right:3.5%; top:0; bottom:0; width:2px; }
-.cf-h1{ left:3.5%; right:3.5%; top:9.7%; height:2px; }
-.cf-h2{ left:3.5%; right:3.5%; top:24%; height:2px; }
-.cf-dot{ position:absolute; width:12px; height:12px; background:#1E2B4F; border-radius:50%; }
-.cf-dot-1{ left:calc(3.5% - 5px); top:calc(9.7% - 6px); }
-.cf-dot-2{ right:calc(3.5% - 5px); top:calc(9.7% - 6px); }
-.cf-dot-3{ left:calc(3.5% - 5px); top:calc(24% - 6px); }
-.cf-dot-4{ right:calc(3.5% - 5px); top:calc(24% - 6px); }
-.cf-tag{ position:absolute; left:10%; top:4.2%; background:#1E2B4F; color:#F2EFE6; font-family:'Anton',sans-serif; font-size:20px; letter-spacing:.08em; padding:2px 14px 3px; }
-.cf-tag-line{ position:absolute; left:35.5%; top:6%; right:3.5%; height:2px; background:#1E2B4F; }
-.cf-logo{ position:absolute; right:6%; top:3.5%; text-align:right; font-family:'Anton',sans-serif; color:#1E2B4F; line-height:.92; }
-.cf-logo b{ display:block; font-size:22px; letter-spacing:.04em; }
-.cf-logo i{ display:block; font-style:normal; font-size:11px; letter-spacing:.32em; }
-.cf-headline{ position:absolute; left:7.5%; right:7.5%; top:10.8%; font-family:'Anton',sans-serif; font-size:52px; line-height:.9; color:#1E2B4F; letter-spacing:.005em; white-space:nowrap; }
-.cf-sticker{ position:absolute; left:28%; top:15.5%; transform:rotate(-12deg); background:#EDE8DA; color:#111; font-family:Georgia,serif; font-style:italic; font-size:15px; padding:3px 10px; box-shadow:2px 2px 0 #00000044; }
-.cf-sticker::after{ content:""; position:absolute; left:0; right:0; bottom:-5px; height:5px; background:repeating-linear-gradient(-45deg,#111 0 6px,transparent 6px 12px); }
-.cf-vertical{ position:absolute; right:9%; top:30.5%; height:53.5%; width:40px; transform:rotate(90deg); transform-origin:center; font-family:'Anton',sans-serif; font-size:34px; letter-spacing:.06em; color:#1E2B4F; white-space:nowrap; }
-.cf-vrule{ position:absolute; left:75%; top:28%; bottom:15%; width:1.5px; background:#1E2B4F; }
-.cf-vdot{ position:absolute; left:calc(75% - 4px); top:calc(28% - 4px); width:8px; height:8px; background:#1E2B4F; border-radius:50%; }
-.cf-photo{ position:absolute; left:9%; top:29%; width:31%; height:44%; overflow:hidden; background:linear-gradient(160deg,#16324F,#3E6288); }
-.cf-photo img{ width:100%; height:100%; object-fit:cover; object-position:15% 12%; display:block; filter:saturate(.95) contrast(1.02); }
-.cf-name{ position:absolute; left:11%; top:66.3%; width:56%; height:6.2%; background:#ECE7D9; box-shadow:4px 5px 0 #1E2B4F33; display:flex; align-items:center; padding:0 16px; }
-.cf-name b{ font-family:'Anton',sans-serif; font-size:30px; letter-spacing:.06em; color:#1E2B4F; }
-.cf-band{ position:absolute; left:0; right:0; top:87.5%; bottom:0; background:#1E2B4F; }
-.cf-band-title{ position:absolute; left:5%; top:50%; transform:translateY(-50%); font-family:'Anton',sans-serif; font-size:40px; letter-spacing:.04em; color:#ECE7D9; }
-.cf-guilloche{ position:absolute; right:34%; top:5%; width:52px; height:52px; opacity:.9; }
-.cf-quote{ position:absolute; right:7%; top:50%; transform:translateY(-50%); color:#F2F0E8; font-size:13px; line-height:1.3; font-weight:400; text-align:left; }
-.cf-hook{ position:absolute; background:linear-gradient(180deg,#e8e8e8,#9a9a9a 55%,#5c5c5c); border-radius:50%; box-shadow:inset 0 -3px 5px #00000033, inset 0 2px 3px #ffffffaa; }
-.cf-hook-l{ left:-4%; bottom:3%; width:54px; height:20px; transform:rotate(28deg); }
-.cf-hook-r{ right:-4%; bottom:-2%; width:64px; height:22px; transform:rotate(-32deg); }
-
-/* ===== CARD BACK (blueprint + QR) ===== */
-.card-back{ background:#E8DFC8; background-image:linear-gradient(#5C6B7E22 1px,transparent 1px),linear-gradient(90deg,#5C6B7E22 1px,transparent 1px),linear-gradient(45deg,#5C6B7E18 1px,transparent 1px),linear-gradient(-45deg,#5C6B7E18 1px,transparent 1px); background-size:24px 24px,24px 24px,34px 34px,34px 34px; }
-.cb-tape{ position:absolute; left:4%; top:3%; transform:rotate(-4deg); background:#EDE8DA; color:#16243D; font-family:'Anton',sans-serif; font-size:16px; letter-spacing:.06em; padding:4px 14px; box-shadow:1px 2px 0 #00000033; }
-.cb-tape::after{ content:""; position:absolute; left:0; right:0; bottom:-6px; height:6px; background:repeating-linear-gradient(-45deg,#16243D 0 6px,transparent 6px 12px); }
-.cb-logo{ position:absolute; right:5%; top:4.5%; text-align:right; font-family:'Anton',sans-serif; color:#1A2438; line-height:.9; }
-.cb-logo b{ display:block; font-size:20px; }
-.cb-logo i{ display:block; font-style:normal; font-size:10px; letter-spacing:.3em; }
-.cb-panel{ position:absolute; left:8%; top:18%; width:72%; height:60%; background:#1B2A47; box-shadow:3px 4px 0 #00000022; }
-.cb-panel::before{ content:""; position:absolute; left:0; top:8%; bottom:16%; width:12px; background:repeating-linear-gradient(180deg,#EFE6CE 0 10px,transparent 10px 20px); }
-.cb-head{ position:absolute; left:0; right:0; top:9%; text-align:center; color:#EFE6CE; font-family:'Anton',sans-serif; }
-.cb-head b{ display:block; font-size:22px; letter-spacing:.06em; }
-.cb-head i{ display:block; font-style:normal; font-size:15px; letter-spacing:.18em; margin-top:2px; }
-.cb-qr{ position:absolute; left:50%; top:44%; transform:translate(-50%,-50%); width:44%; aspect-ratio:1; }
-.cb-qr img{ width:100%; height:100%; display:block; }
-.cb-banner{ position:absolute; right:2%; top:18%; width:12%; height:60%; background:#1B2A47; display:flex; align-items:center; justify-content:center; }
-.cb-banner span{ writing-mode:vertical-rl; transform:rotate(180deg); color:#EFE6CE; font-family:'Anton',sans-serif; font-size:15px; letter-spacing:.22em; }
-.cb-nameplate{ position:absolute; left:6%; right:6%; top:82%; height:14.5%; background:#1B2A47; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:2px 3px 0 #00000022; }
-.cb-nameplate b{ color:#EFE6CE; font-family:'Anton',sans-serif; font-size:24px; letter-spacing:.1em; }
-.cb-nameplate i{ color:#EFE6CE; font-style:normal; font-size:12px; letter-spacing:.2em; margin-top:2px; }
+/* ===== CARD FRONT/BACK = pre-rendered images ===== */
+.card-front img,.card-back img{ width:100%; height:100%; object-fit:cover; display:block; }
 
 @keyframes card-float{ 0%,100%{ transform:rotate(-6deg) translateY(0); } 50%{ transform:rotate(-2deg) translateY(-12px); } }
 
@@ -163,41 +111,9 @@
                 <div class="lanyard-float">
                   <div class="lanyard-band"><span class="lanyard-band-text">KYUZA</span></div>
                   <div class="card3d" id="card3d">
-                  <div class="card-face card-front">
-                    <div class="cf-rule cf-vl"></div><div class="cf-rule cf-vr"></div>
-                    <div class="cf-rule cf-h1"></div><div class="cf-rule cf-h2"></div>
-                    <span class="cf-dot cf-dot-1"></span><span class="cf-dot cf-dot-2"></span>
-                    <span class="cf-dot cf-dot-3"></span><span class="cf-dot cf-dot-4"></span>
-                    <div class="cf-tag">JUNIOR</div>
-                    <div class="cf-tag-line"></div>
-                    <div class="cf-logo"><b>KYUZA</b><i>LABS</i></div>
-                    <div class="cf-headline">DEVELOPER</div>
-                    <div class="cf-sticker">original</div>
-                    <div class="cf-vrule"></div><div class="cf-vdot"></div>
-                    <div class="cf-vertical">WEB3 BUILDER</div>
-                    <div class="cf-photo"><img src="assets/killua.jpg" alt="Killua"></div>
-                    <div class="cf-name"><b>KYUZA</b></div>
-                    <div class="cf-band">
-                      <div class="cf-band-title">PORTFOLIO</div>
-                      <svg class="cf-guilloche" viewBox="0 0 100 100" fill="none" stroke="#ECE7D9" stroke-width="1.2">
-                        <circle cx="50" cy="50" r="6"/><circle cx="50" cy="50" r="12"/><circle cx="50" cy="50" r="18"/>
-                        <circle cx="50" cy="50" r="24"/><circle cx="50" cy="50" r="30"/><circle cx="50" cy="50" r="36"/>
-                      </svg>
-                      <div class="cf-quote">Don't repeat<br>yourself</div>
-                    </div>
-                    <div class="cf-hook cf-hook-l"></div><div class="cf-hook cf-hook-r"></div>
+                  <div class="card-face card-front"><img src="assets/card_front.png" alt="Kyuza card front"></div>
+                  <div class="card-face card-back"><img src="assets/card_back.png" alt="Kyuza card back"></div>
                   </div>
-                  <div class="card-face card-back">
-                    <div class="cb-tape">SCAN HERE</div>
-                    <div class="cb-logo"><b>KYUZA</b><i>LABS</i></div>
-                    <div class="cb-panel">
-                      <div class="cb-head"><b>CONNECT OUR</b><i>— SOSMED —</i></div>
-                      <div class="cb-qr"><img src="assets/qr_cream.png" alt="QR"></div>
-                    </div>
-                    <div class="cb-banner"><span>WEB3 BUILDER</span></div>
-                    <div class="cb-nameplate"><b>KYUZA</b><i>— Web3 Builder —</i></div>
-                  </div>
-                </div>
                 </div>
               </div>
             </div>
@@ -522,9 +438,15 @@
     var ri = 0, ci = 0, del = false;
     (function tick(){
       var word = roles[ri];
-      if(!del){ ci++; if(ci >= word.length){ del = true; setTimeout(tick, 1400); return; } }
-      else { ci--; if(ci <= 0){ del = false; ri = (ri+1)%roles.length; } }
-      tw.textContent = word.slice(0, ci);
+      if(!del){
+        ci++;
+        tw.textContent = word.slice(0, ci);
+        if(ci >= word.length){ del = true; setTimeout(tick, 1400); return; }
+      } else {
+        ci--;
+        tw.textContent = word.slice(0, ci);
+        if(ci <= 0){ del = false; ri = (ri+1)%roles.length; }
+      }
       setTimeout(tick, del ? 45 : 90);
     })();
   }

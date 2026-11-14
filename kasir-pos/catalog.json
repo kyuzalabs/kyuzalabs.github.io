@@ -1,0 +1,36 @@
+{
+  "categories": [
+    {"name": "Makanan", "emoji": "🍜"},
+    {"name": "Minuman", "emoji": "🥤"},
+    {"name": "Snack", "emoji": "🍟"},
+    {"name": "Dessert", "emoji": "🍰"}
+  ],
+  "products": [
+    {"name": "Nasi Goreng Spesial", "price_idr": 25000, "category": "Makanan", "emoji": "🍛"},
+    {"name": "Mie Goreng", "price_idr": 22000, "category": "Makanan", "emoji": "🍝"},
+    {"name": "Nasi Ayam Geprek", "price_idr": 23000, "category": "Makanan", "emoji": "🍗"},
+    {"name": "Nasi Rendang", "price_idr": 28000, "category": "Makanan", "emoji": "🍛"},
+    {"name": "Ayam Bakar", "price_idr": 27000, "category": "Makanan", "emoji": "🍗"},
+    {"name": "Soto Ayam", "price_idr": 20000, "category": "Makanan", "emoji": "🍲"},
+    {"name": "Mie Ayam Bakso", "price_idr": 18000, "category": "Makanan", "emoji": "🍜"},
+    {"name": "Nasi Goreng Seafood", "price_idr": 30000, "category": "Makanan", "emoji": "🦐"},
+
+    {"name": "Es Teh Manis", "price_idr": 5000, "category": "Minuman", "emoji": "🧋"},
+    {"name": "Es Jeruk", "price_idr": 7000, "category": "Minuman", "emoji": "🍊"},
+    {"name": "Kopi Susu Gula Aren", "price_idr": 18000, "category": "Minuman", "emoji": "☕"},
+    {"name": "Es Kopi Susu", "price_idr": 15000, "category": "Minuman", "emoji": "🧋"},
+    {"name": "Teh Hangat", "price_idr": 4000, "category": "Minuman", "emoji": "🍵"},
+    {"name": "Jus Alpukat", "price_idr": 14000, "category": "Minuman", "emoji": "🥑"},
+    {"name": "Air Mineral", "price_idr": 4000, "category": "Minuman", "emoji": "💧"},
+    {"name": "Es Milo", "price_idr": 10000, "category": "Minuman", "emoji": "🥤"},
+
+    {"name": "Kentang Goreng", "price_idr": 15000, "category": "Snack", "emoji": "🍟"},
+    {"name": "Tahu Crispy", "price_idr": 10000, "category": "Snack", "emoji": "🧆"},
+    {"name": "Pisang Goreng Keju", "price_idr": 12000, "category": "Snack", "emoji": "🍌"},
+    {"name": "Dimsum Ayam (4 pcs)", "price_idr": 17000, "category": "Snack", "emoji": "🥟"},
+
+    {"name": "Es Krim Vanila", "price_idr": 8000, "category": "Dessert", "emoji": "🍦"},
+    {"name": "Es Campur", "price_idr": 13000, "category": "Dessert", "emoji": "🍧"},
+    {"name": "Puding Coklat", "price_idr": 10000, "category": "Dessert", "emoji": "🍮"}
+  ]
+}

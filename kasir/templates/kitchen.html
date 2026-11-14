@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Dapur{% endblock %}
+{% block body %}
+<div class="wrap">
+  <h2>Dapur 🍳</h2>
+  {% for o in orders %}
+  <div class="korder">
+    <div class="khead">#{{ o.id }} — {{ o.table_name }}
+      <span class="badge {{ o.status }}">{{ o.status }}</span>
+    </div>
+    {% for it in o.lines %}
+    <form method="post" action="{{ url_for('toggle_item', item_id=it.id) }}" class="kitem">
+      <button type="submit" class="tick {{ it.status }}">{{ '✓' if it.status=='done' else '○' }}</button>
+      <span>{{ it.name }} × {{ it.qty }}</span>
+    </form>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="muted">Tidak ada pesanan.</p>
+  {% endfor %}
+</div>
+{% endblock %}

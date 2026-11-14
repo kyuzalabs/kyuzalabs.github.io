@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}KyzuKasir{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="/kasir" class="logo">Kyzu<span class="dot">Kasir</span></a>
+      <div class="nav-links">
+        <a href="/kasir" class="nav-link {{ 'active' if request.endpoint == 'kasir' }}">🛒 Kasir</a>
+        <a href="/dapur" class="nav-link {{ 'active' if request.endpoint == 'dapur' }}">🍳 Dapur</a>
+        {% if session.get('is_admin') %}
+        <a href="/admin" class="nav-link">📊 Admin</a>
+        {% endif %}
+      </div>
+      <div class="spacer"></div>
+      <div class="nav-actions">
+        {% if session.get('user_id') %}
+          <span class="nav-user">{{ session.get('name') }}</span>
+          <a href="/logout" class="btn btn-ghost btn-sm">Keluar</a>
+        {% else %}
+          <a href="/login" class="btn btn-primary btn-sm">Masuk</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="container flash">
+      {% for category, message in messages %}
+        <div class="flash-msg flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="main">
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">&copy; 2026 <span class="grad">KyzuKasir</span> — POS warung makan & cafe.</div>
+  </footer>
+</body>
+</html>

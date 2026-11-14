@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ o.id }}{% endblock %}
+{% block body %}
+<div class="wrap">
+  <h2>Order #{{ o.id }} — {{ o.table_name }}</h2>
+  <p class="muted">Status: {{ o.status }}</p>
+
+  <table class="lines">
+    <tr><th>Item</th><th>Qty</th><th>Harga</th><th>Subtotal</th></tr>
+    {% for it in items %}
+    <tr>
+      <td>{{ it.name }}</td>
+      <td>
+        {% if o.status == 'active' %}
+        <form method="post" action="{{ url_for('set_qty', order_id=o.id) }}" class="qtyform">
+          <input type="hidden" name="item_id" value="{{ it.id }}">
+          <input type="number" name="qty" value="{{ it.qty }}" min="1" max="99" onchange="this.form.submit()">
+        </form>
+        {% else %}{{ it.qty }}{% endif %}
+      </td>
+      <td>Rp {{ it.price }}</td>
+      <td>Rp {{ it.price * it.qty }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <div class="total">Total: <b>Rp {{ total }}</b></div>
+
+  {% if o.status == 'active' %}
+  <h3>Tambah item</h3>
+  <div class="menu">
+    {% for m in menu %}
+    <form method="post" action="{{ url_for('add_item', order_id=o.id) }}">
+      <input type="hidden" name="menu_id" value="{{ m.id }}">
+      <button class="chip add" type="submit">{{ m.name }} · Rp {{ m.price }}</button>
+    </form>
+    {% endfor %}
+  </div>
+
+  <h3>Checkout</h3>
+  <form method="post" action="{{ url_for('checkout', order_id=o.id) }}" class="checkout">
+    <select name="method">
+      <option value="cash">Tunai</option>
+      <option value="qris">QRIS</option>
+      <option value="transfer">Transfer</option>
+    </select>
+    <input type="number" name="cash" placeholder="Uang diterima (untuk tunai)">
+    <button class="btn" type="submit">Bayar Rp {{ total }}</button>
+  </form>
+  {% elif o.status == 'paid' %}
+  <div class="paid">✅ Dibayar via {{ o.payment_method }}. Kembalian: Rp {{ o.change_idr or 0 }}</div>
+  <form method="post" action="{{ url_for('finish_order', order_id=o.id) }}">
+    <button class="btn ok" type="submit">Selesai & bebaskan meja</button>
+  </form>
+  {% else %}
+  <div class="paid">Order selesai.</div>
+  {% endif %}
+</div>
+{% endblock %}

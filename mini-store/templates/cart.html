@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Keranjang — Kyuza Shop{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1 class="page-title">Keranjang belanja</h1>
+  <p class="page-sub">Cek dulu barang-barangmu sebelum lanjut bayar.</p>
+</div>
+
+{% if cart %}
+
+{% set grand_total = 0 %}
+{% for item in cart %}{% set grand_total = grand_total + item.subtotal %}{% endfor %}
+
+<div class="cart-layout">
+  <div>
+    {% for item in cart %}
+    <div class="cart-item">
+      {% if item.image_url %}
+        <img class="cart-thumb" src="{{ item.image_url }}" alt="{{ item.name }}">
+      {% else %}
+        <div class="cart-thumb" style="display:grid;place-items:center;color:var(--text-faint);">🛍️</div>
+      {% endif %}
+      <div class="cart-info">
+        <p class="cart-name">{{ item.name }}</p>
+        <p class="cart-price">Rp {{ '{:,.0f}'.format(item.price_idr).replace(',', '.') }} / pcs</p>
+        <div class="cart-controls">
+          <form method="POST" action="/cart/update" style="display:flex;gap:8px;align-items:center;">
+            <input type="hidden" name="product_id" value="{{ item.product_id }}">
+            <input class="qty-input" type="number" name="qty" value="{{ item.qty }}" min="1">
+            <button class="btn btn-ghost btn-sm" type="submit">Ubah</button>
+          </form>
+          <form method="POST" action="/cart/remove/{{ item.product_id }}">
+            <button class="btn btn-danger btn-sm" type="submit">Hapus</button>
+          </form>
+        </div>
+      </div>
+      <div class="cart-subtotal">
+        Rp {{ '{:,.0f}'.format(item.subtotal).replace(',', '.') }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="card summary-sticky">
+    <h3 class="panel-title">Ringkasan</h3>
+    <div class="summary-row"><span>Total item</span><span>{{ cart|length }}</span></div>
+    <div class="summary-total">
+      <span>Total</span>
+      <span class="price">Rp {{ '{:,.0f}'.format(grand_total).replace(',', '.') }}</span>
+    </div>
+    <a href="/checkout" class="btn btn-primary btn-block mt-16">Checkout →</a>
+    <a href="/" class="btn btn-ghost btn-block mt-8">Lanjut belanja</a>
+  </div>
+</div>
+
+{% else %}
+<div class="empty-state">
+  <span class="emoji">🛒</span>
+  <p>Keranjang kosong.<br>Yuk mulai belanja, ada banyak barang menarik menunggumu.</p>
+  <a href="/" class="btn btn-primary mt-16">Mulai Belanja</a>
+</div>
+{% endif %}
+
+{% endblock %}

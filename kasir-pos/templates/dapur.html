@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Dapur — KyzuKasir{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">🍳 Dapur</h1>
+  <p class="page-sub">Pesanan yang sudah dibayar &amp; menunggu dimasak.</p>
+</div>
+
+{% if orders %}
+<div class="ticket-grid">
+  {% for o in orders %}
+  <div class="ticket card">
+    <div class="ticket-head">
+      <span class="ticket-table">{{ o.table }}</span>
+      <span class="ticket-id">#{{ o.id }}</span>
+      {% if o.pending %}<span class="badge pending">{{ o.pending }} item</span>{% else %}<span class="badge done">Siap</span>{% endif %}
+    </div>
+    <div class="ticket-items">
+      {% for it in o.lines %}
+      <div class="ti {{ 'done' if it.status == 'done' else 'pending' }}">
+        <span>{{ it.qty }}× {{ it.name }}</span>
+        {% if it.status == 'pending' %}
+        <form method="POST" action="/dapur/item/{{ it.id }}/done">
+          <button class="btn btn-sm btn-primary">Selesai</button>
+        </form>
+        {% else %}
+        <span class="ti-ok">✓</span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <span class="emoji">🍽️</span>
+  <p>Belum ada pesanan masuk dapur.</p>
+</div>
+{% endif %}
+{% endblock %}

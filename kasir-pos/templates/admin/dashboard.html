@@ -1,0 +1,36 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h1 class="page-title">📊 Dashboard</h1>
+
+<div class="stats-grid">
+  <div class="stat-card"><div class="stat-label">Pendapatan Hari Ini</div><div class="stat-value">{{ revenue|idr }}</div></div>
+  <div class="stat-card cyan"><div class="stat-label">Total Pesanan</div><div class="stat-value">{{ total_orders }}</div></div>
+  <div class="stat-card green"><div class="stat-label">Total Pendapatan</div><div class="stat-value">{{ total_revenue|idr }}</div></div>
+  <div class="stat-card"><div class="stat-label">Meja Terpakai</div><div class="stat-value">{{ busy_tables }}</div></div>
+</div>
+
+<h2 class="section-title">Per Metode Bayar (hari ini)</h2>
+{% if by_method %}
+<div class="stats-grid">
+  {% for m, v in by_method.items() %}
+  <div class="stat-card"><div class="stat-label">{{ method_label(m) }}</div><div class="stat-value">{{ v|idr }}</div></div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="muted">Belum ada transaksi hari ini.</p>
+{% endif %}
+
+<h2 class="section-title">Pesanan Hari Ini</h2>
+{% if today_orders %}
+<div class="table-wrap">
+  <table class="table">
+    <tr><th>#</th><th>Meja</th><th>Metode</th><th>Total</th><th>Waktu</th></tr>
+    {% for o in today_orders %}
+    <tr><td>#{{ o.id }}</td><td>{{ table_name(o.table_id) }}</td><td>{{ method_label(o.payment_method) }}</td><td>{{ o.total_idr|idr }}</td><td>{{ o.paid_at|ctime }}</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% else %}
+<p class="muted">Belum ada transaksi hari ini.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard — Kyuza Shop{% endblock %}
+{% block content %}
+
+<div class="admin-topbar">
+  <div>
+    <h1 class="page-title" style="font-size:1.5rem;">Dashboard</h1>
+    <p class="page-sub">Ringkasan performa tokomu hari ini.</p>
+  </div>
+  <a href="/admin/products" class="btn btn-primary btn-sm">+ Tambah Produk</a>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Total Pesanan</div>
+    <div class="stat-value">{{ stats.total_orders }}</div>
+  </div>
+  <div class="stat-card cyan">
+    <div class="stat-label">Total Pendapatan</div>
+    <div class="stat-value" style="font-size:1.4rem;">Rp {{ '{:,.0f}'.format(stats.total_revenue_idr).replace(',', '.') }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Pesanan Pending</div>
+    <div class="stat-value">{{ stats.pending_orders }}</div>
+  </div>
+  <div class="stat-card green">
+    <div class="stat-label">Total Produk</div>
+    <div class="stat-value">{{ stats.total_products }}</div>
+  </div>
+</div>
+
+<h2 class="section-title">Pesanan terbaru</h2>
+{% if recent_orders %}
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Dibuat</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in recent_orders %}
+      <tr>
+        <td><a href="/admin/orders" style="color:var(--cyan);font-weight:700;">#{{ o.id }}</a></td>
+        <td>Rp {{ '{:,.0f}'.format(o.total_idr).replace(',', '.') }}</td>
+        <td><span class="badge badge-{{ o.status }}">{{ o.status }}</span></td>
+        <td class="muted">{{ o.created_at }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty-state">
+  <span class="emoji">📈</span>
+  <p>Belum ada pesanan masuk.</p>
+</div>
+{% endif %}
+
+{% endblock %}

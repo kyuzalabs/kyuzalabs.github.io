@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+store.db
+*.db
+.env
+store.env
+config.json
+.venv/

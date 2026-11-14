@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+config.json
+*.db
+.env
+admin_credentials.txt

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — Kyuza Shop{% endblock %}
+{% block content %}
+
+<div class="product-detail">
+  <div>
+    {% if product.image_url %}
+      <img class="product-img" src="{{ product.image_url }}" alt="{{ product.name }}">
+    {% else %}
+      <div class="product-tile product-tile-lg"><span class="tile-emoji">{{ product.emoji or '🎮' }}</span></div>
+    {% endif %}
+  </div>
+
+  <div>
+    <h1>{{ product.name }}</h1>
+
+    <div class="tags">
+      <span class="tag">{{ product.category }}</span>
+    </div>
+
+    <div class="price" style="font-size:1.8rem;margin:8px 0;">
+      <span class="cur">Rp</span> {{ '{:,.0f}'.format(product.price_idr).replace(',', '.') }}
+    </div>
+
+    {% if product.description %}
+      <p style="color:var(--text-dim);">{{ product.description }}</p>
+    {% endif %}
+
+    {% if product.stock is defined %}
+      {% if product.stock >= 900 %}
+        <p class="stock-info"><span class="in">⚡ Tersedia</span> — top-up diproses otomatis & instan</p>
+      {% elif product.stock > 10 %}
+        <p class="stock-info">Stok tersedia: <span class="in">{{ product.stock }} unit</span></p>
+      {% elif product.stock > 0 %}
+        <p class="stock-info">Stok menipis: <span class="low">sisa {{ product.stock }} unit</span></p>
+      {% else %}
+        <p class="stock-info">Stok <span class="out">habis</span></p>
+      {% endif %}
+    {% endif %}
+
+    <form class="qty-form" method="POST" action="/cart/add">
+      <input type="hidden" name="product_id" value="{{ product.id }}">
+      <input class="qty-input" type="number" name="qty" value="1" min="1" max="{{ product.stock if product.stock else 99 }}">
+      <button class="btn btn-primary" type="submit" {% if product.stock is defined and product.stock <= 0 %}disabled{% endif %}>➕ Tambah ke Keranjang</button>
+      <a href="/" class="btn btn-ghost">&larr; Kembali belanja</a>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

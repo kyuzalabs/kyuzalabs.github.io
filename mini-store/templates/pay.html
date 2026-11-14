@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Pembayaran — Kyuza Shop{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1 class="page-title">Pembayaran</h1>
+  <p class="page-sub">Pesanan <span class="mono" style="color:var(--cyan);">#{{ order.id }}</span></p>
+</div>
+
+<div class="card" style="max-width:720px;margin:0 auto;">
+
+{% if order.status == 'pending' %}
+  <div class="status-hero">
+    <div style="font-size:2.4rem;">⏳</div>
+    <p class="page-sub">Tunggu pembayaran — silakan transfer token ke alamat di bawah.</p>
+    <div class="amount-hero mt-8">{{ order.crypto_amount }} <small>{{ order.crypto_symbol }}</small></div>
+    <p class="muted" style="font-size:.9rem;">setara Rp {{ '{:,.0f}'.format(order.total_idr).replace(',', '.') }}</p>
+  </div>
+
+  <ol class="pay-steps">
+    <li>
+      Kirim <strong style="color:var(--text);">{{ order.crypto_amount }} {{ order.crypto_symbol }}</strong>
+      lewat jaringan <strong style="color:var(--text);">{{ order.network }}</strong>.
+    </li>
+    <li>
+      Salin alamat deposit di bawah, tempel di wallet kamu:
+      <div class="address-box">
+        <code id="deposit-address">{{ order.deposit_address }}</code>
+        <button class="btn btn-secondary btn-sm" type="button" onclick="copyAddress()">📋 Salin</button>
+      </div>
+    </li>
+    <li>
+      Setelah transfer, tempel <strong style="color:var(--text);">transaction hash (TXID)</strong>-nya di kolom bawah, lalu kirim.
+      Sistem bakal cek status pembayaranmu secara berkala.
+    </li>
+  </ol>
+
+  <form method="POST" action="/pay/{{ order.id }}/confirm">
+    <div class="field">
+      <label class="label" for="tx_hash">Transaction Hash (TXID)</label>
+      <input class="input mono" id="tx_hash" type="text" name="tx_hash" placeholder="0x..." required>
+      <p class="form-hint">Paste TXID dari wallet kamu setelah transfer berhasil.</p>
+    </div>
+    <button class="btn btn-primary btn-block" type="submit">Konfirmasi Pembayaran</button>
+  </form>
+
+  {% if order.tx_hash %}
+    <p class="muted mt-16" style="font-size:.85rem;">TXID yang pernah dikirim: <span class="mono">{{ order.tx_hash }}</span></p>
+  {% endif %}
+
+{% elif order.status == 'paid' or order.status == 'shipped' or order.status == 'completed' %}
+  <div class="status-hero">
+    <div style="font-size:3rem;">✅</div>
+    <h2 style="margin:8px 0;">Pembayaran {{ 'berhasil!' if order.status == 'paid' else 'diterima ✓' }}</h2>
+    <p class="muted">Terima kasih sudah berbelanja di Kyuza Shop. Status pesananmu sekarang <strong style="color:var(--text);">{{ order.status }}</strong>.</p>
+    <div class="amount-hero">{{ order.crypto_amount }} <small>{{ order.crypto_symbol }}</small></div>
+  </div>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+    <a href="/order/{{ order.id }}" class="btn btn-secondary">Lihat Pesanan</a>
+    <a href="/" class="btn btn-primary">Belanja Lagi</a>
+  </div>
+
+{% else %}
+  <div class="status-hero">
+    <div style="font-size:3rem;">⚠️</div>
+    <h2 style="margin:8px 0;">Status pesanan: {{ order.status }}</h2>
+    <p class="muted">Pesanan ini sudah nggak menunggu pembayaran lagi.</p>
+    <a href="/orders" class="btn btn-secondary mt-16">Ke Daftar Pesanan</a>
+  </div>
+{% endif %}
+
+</div>
+
+<script>
+function copyAddress() {
+  var el = document.getElementById('deposit-address');
+  var text = (el.textContent || '').trim();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function () {
+      var btn = document.querySelector('.address-box .btn');
+      var orig = btn.textContent;
+      btn.textContent = '✓ Tersalin';
+      setTimeout(function () { btn.textContent = orig; }, 1600);
+    }).catch(function () { fallbackCopy(text); });
+  } else {
+    fallbackCopy(text);
+  }
+}
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+}
+</script>
+
+{% endblock %}

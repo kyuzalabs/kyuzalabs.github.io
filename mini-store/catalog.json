@@ -1,0 +1,36 @@
+[
+  {"name": "86 Diamonds", "description": "Top-up diamond Mobile Legends, masuk otomatis ke akun dalam hitungan detik. 100% legal & aman.", "price_idr": 21000, "category": "Mobile Legends", "emoji": "⚔️", "stock": 999},
+  {"name": "172 Diamonds", "description": "Top-up diamond Mobile Legends, masuk otomatis ke akun dalam hitungan detik. 100% legal & aman.", "price_idr": 42000, "category": "Mobile Legends", "emoji": "⚔️", "stock": 999},
+  {"name": "257 Diamonds", "description": "Top-up diamond Mobile Legends, masuk otomatis ke akun dalam hitungan detik. 100% legal & aman.", "price_idr": 63000, "category": "Mobile Legends", "emoji": "⚔️", "stock": 999},
+  {"name": "355 Diamonds", "description": "Top-up diamond Mobile Legends, masuk otomatis ke akun dalam hitungan detik. 100% legal & aman.", "price_idr": 87000, "category": "Mobile Legends", "emoji": "⚔️", "stock": 999},
+  {"name": "720 + 60 Diamonds", "description": "Top-up diamond Mobile Legends bonus 60, masuk otomatis dalam hitungan detik.", "price_idr": 175000, "category": "Mobile Legends", "emoji": "⚔️", "stock": 999},
+  {"name": "1450 + 145 Diamonds", "description": "Top-up diamond Mobile Legends bonus 145, masuk otomatis dalam hitungan detik.", "price_idr": 349000, "category": "Mobile Legends", "emoji": "⚔️", "stock": 999},
+
+  {"name": "100 Diamonds", "description": "Top-up diamond Free Fire, proses cepat & instan ke ID kamu. Aman dan resmi.", "price_idr": 15000, "category": "Free Fire", "emoji": "🔥", "stock": 999},
+  {"name": "310 Diamonds", "description": "Top-up diamond Free Fire, proses cepat & instan ke ID kamu. Aman dan resmi.", "price_idr": 45000, "category": "Free Fire", "emoji": "🔥", "stock": 999},
+  {"name": "520 Diamonds", "description": "Top-up diamond Free Fire, proses cepat & instan ke ID kamu. Aman dan resmi.", "price_idr": 74000, "category": "Free Fire", "emoji": "🔥", "stock": 999},
+  {"name": "1060 Diamonds", "description": "Top-up diamond Free Fire, proses cepat & instan ke ID kamu. Aman dan resmi.", "price_idr": 148000, "category": "Free Fire", "emoji": "🔥", "stock": 999},
+
+  {"name": "60 UC", "description": "Top-up UC PUBG Mobile, cocok buat beli item kecil atau emote. Masuk otomatis.", "price_idr": 17000, "category": "PUBG Mobile", "emoji": "🪂", "stock": 999},
+  {"name": "325 UC", "description": "Top-up UC PUBG Mobile, masukkan ID lalu UC masuk otomatis dalam hitungan detik.", "price_idr": 81000, "category": "PUBG Mobile", "emoji": "🪂", "stock": 999},
+  {"name": "660 UC", "description": "Top-up UC PUBG Mobile, pas buat Royale Pass atau crate. Masuk otomatis.", "price_idr": 161000, "category": "PUBG Mobile", "emoji": "🪂", "stock": 999},
+  {"name": "1815 UC", "description": "Top-up UC PUBG Mobile jumlah besar, masuk otomatis ke akun kamu.", "price_idr": 405000, "category": "PUBG Mobile", "emoji": "🪂", "stock": 999},
+
+  {"name": "80 Robux", "description": "Top-up Robux Roblox, masuk otomatis ke akun. Aman & cepat.", "price_idr": 16000, "category": "Roblox", "emoji": "🎮", "stock": 999},
+  {"name": "400 Robux", "description": "Top-up Robux Roblox, masuk otomatis ke akun. Aman & cepat.", "price_idr": 79000, "category": "Roblox", "emoji": "🎮", "stock": 999},
+  {"name": "800 Robux", "description": "Top-up Robux Roblox, masuk otomatis ke akun. Aman & cepat.", "price_idr": 159000, "category": "Roblox", "emoji": "🎮", "stock": 999},
+  {"name": "1700 Robux", "description": "Top-up Robux Roblox jumlah besar, masuk otomatis ke akun kamu.", "price_idr": 318000, "category": "Roblox", "emoji": "🎮", "stock": 999},
+
+  {"name": "60 Genesis Crystal", "description": "Top-up Genesis Crystal Genshin Impact, masuk otomatis via UID.", "price_idr": 15000, "category": "Genshin Impact", "emoji": "🌌", "stock": 999},
+  {"name": "330 Genesis Crystal", "description": "Top-up Genesis Crystal Genshin Impact, masuk otomatis via UID.", "price_idr": 78000, "category": "Genshin Impact", "emoji": "🌌", "stock": 999},
+  {"name": "1090 Genesis Crystal", "description": "Top-up Genesis Crystal Genshin Impact, masuk otomatis via UID.", "price_idr": 224000, "category": "Genshin Impact", "emoji": "🌌", "stock": 999},
+
+  {"name": "475 VP", "description": "Top-up Valorant Points (VP), masukkan Riot ID lalu VP masuk otomatis.", "price_idr": 55000, "category": "Valorant", "emoji": "🎯", "stock": 999},
+  {"name": "1000 VP", "description": "Top-up Valorant Points (VP), masukkan Riot ID lalu VP masuk otomatis.", "price_idr": 110000, "category": "Valorant", "emoji": "🎯", "stock": 999},
+  {"name": "2050 VP", "description": "Top-up Valorant Points (VP), masukkan Riot ID lalu VP masuk otomatis.", "price_idr": 219000, "category": "Valorant", "emoji": "🎯", "stock": 999},
+
+  {"name": "Google Play Gift Card Rp 50.000", "description": "Kode voucher Google Play dikirim otomatis setelah pembayaran. Redeem di Google Play.", "price_idr": 53000, "category": "Voucher", "emoji": "🎟️", "stock": 999},
+  {"name": "Google Play Gift Card Rp 100.000", "description": "Kode voucher Google Play dikirim otomatis setelah pembayaran. Redeem di Google Play.", "price_idr": 105000, "category": "Voucher", "emoji": "🎟️", "stock": 999},
+  {"name": "UniPin Voucher Rp 50.000", "description": "Kode UniPin dikirim otomatis, bisa dipakai untuk banyak game populer.", "price_idr": 52000, "category": "Voucher", "emoji": "🎟️", "stock": 999},
+  {"name": "Steam Wallet Rp 120.000", "description": "Kode Steam Wallet dikirim otomatis setelah pembayaran. Redeem di akun Steam.", "price_idr": 126000, "category": "Voucher", "emoji": "🎟️", "stock": 999}
+]

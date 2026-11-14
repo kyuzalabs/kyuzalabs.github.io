@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Pesanan #{{ order.id }} — Kyuza Shop{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <a href="/orders" class="btn btn-ghost btn-sm">‹ Kembali ke pesanan</a>
+  <h1 class="page-title mt-8">Pesanan #{{ order.id }}</h1>
+  <p class="page-sub">
+    Status: <span class="badge badge-{{ order.status }}">{{ order.status }}</span>
+  </p>
+</div>
+
+<div class="cart-layout">
+  <div class="card">
+    <h3 class="panel-title">Daftar item</h3>
+    {% for it in items %}
+    <div class="summary-row">
+      <span>{{ it.name }} &times; {{ it.qty }}</span>
+      <span>Rp {{ '{:,.0f}'.format(it.price_idr).replace(',', '.') }}</span>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="card summary-sticky">
+    <h3 class="panel-title">Ringkasan</h3>
+    <div class="summary-row"><span>Dibuat</span><span>{{ order.created_at }}</span></div>
+    {% if order.crypto_symbol %}
+    <div class="summary-row"><span>Metode</span><span>{{ order.crypto_symbol }}</span></div>
+    <div class="summary-row"><span>Jumlah crypto</span><span class="mono">{{ order.crypto_amount }}</span></div>
+    {% endif %}
+    <div class="summary-total">
+      <span>Total</span>
+      <span class="price">Rp {{ '{:,.0f}'.format(order.total_idr).replace(',', '.') }}</span>
+    </div>
+
+    {% if order.status == 'pending' %}
+      <a href="/pay/{{ order.id }}" class="btn btn-primary btn-block mt-16">Lanjut Bayar →</a>
+    {% endif %}
+    <a href="/" class="btn btn-ghost btn-block mt-8">Belanja Lagi</a>
+  </div>
+</div>
+
+{% endblock %}

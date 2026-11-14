@@ -1,0 +1,81 @@
+{% extends "admin/base.html" %}
+{% block title %}Kelola Produk — Kyuza Shop{% endblock %}
+{% block content %}
+
+<div class="admin-topbar">
+  <div>
+    <h1 class="page-title" style="font-size:1.5rem;">Kelola Produk</h1>
+    <p class="page-sub">Tambah produk baru atau lihat daftar yang ada.</p>
+  </div>
+</div>
+
+<div class="card mt-8">
+  <h3 class="panel-title">➕ Tambah produk baru</h3>
+  <form method="POST" action="/admin/products">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="field">
+        <label class="label">Nama produk</label>
+        <input class="input" type="text" name="name" placeholder="Kopi Gayo 250g" required>
+      </div>
+      <div class="field">
+        <label class="label">Harga (Rupiah)</label>
+        <input class="input" type="number" name="price_idr" placeholder="78000" min="0" required>
+      </div>
+      <div class="field">
+        <label class="label">Kategori</label>
+        <input class="input" type="text" name="category" placeholder="Makanan &amp; Minuman">
+      </div>
+      <div class="field">
+        <label class="label">Stok</label>
+        <input class="input" type="number" name="stock" placeholder="99" min="0" value="99">
+      </div>
+      <div class="field" style="grid-column:1/-1;">
+        <label class="label">URL gambar</label>
+        <input class="input" type="url" name="image_url" placeholder="https://...">
+      </div>
+      <div class="field" style="grid-column:1/-1;">
+        <label class="label">Deskripsi</label>
+        <textarea class="input" name="description" placeholder="Deskripsi singkat produk..."></textarea>
+      </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Simpan Produk</button>
+  </form>
+</div>
+
+<h2 class="section-title">Daftar produk</h2>
+{% if products %}
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Produk</th>
+        <th>Kategori</th>
+        <th>Harga</th>
+        <th>Stok</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in products %}
+      <tr>
+        <td>{{ p.id }}</td>
+        <td>
+          <div style="font-weight:700;">{{ p.name }}</div>
+          {% if p.description %}<div class="muted" style="font-size:.8rem;">{{ p.description }}</div>{% endif %}
+        </td>
+        <td class="muted">{{ p.category }}</td>
+        <td>Rp {{ '{:,.0f}'.format(p.price_idr).replace(',', '.') }}</td>
+        <td>{{ p.stock }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty-state">
+  <span class="emoji">📦</span>
+  <p>Belum ada produk. Tambah yang pertama ya.</p>
+</div>
+{% endif %}
+
+{% endblock %}

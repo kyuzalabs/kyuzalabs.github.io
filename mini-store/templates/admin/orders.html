@@ -1,0 +1,57 @@
+{% extends "admin/base.html" %}
+{% block title %}Kelola Pesanan — Kyuza Shop{% endblock %}
+{% block content %}
+
+<div class="admin-topbar">
+  <div>
+    <h1 class="page-title" style="font-size:1.5rem;">Kelola Pesanan</h1>
+    <p class="page-sub">Ubah status pesanan pelanggan di sini.</p>
+  </div>
+</div>
+
+{% if orders %}
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Pelanggan</th>
+        <th>Total</th>
+        <th>Token</th>
+        <th>Status</th>
+        <th>Dibuat</th>
+        <th>Ubah Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td><span style="color:var(--cyan);font-weight:700;">#{{ o.id }}</span></td>
+        <td>{{ o.user_name or o.email or '-' }}</td>
+        <td>Rp {{ '{:,.0f}'.format(o.total_idr).replace(',', '.') }}</td>
+        <td class="muted">{{ o.crypto_symbol or '-' }}</td>
+        <td><span class="badge badge-{{ o.status }}">{{ o.status }}</span></td>
+        <td class="muted">{{ o.created_at }}</td>
+        <td>
+          <form method="POST" action="/admin/orders/{{ o.id }}/status" style="display:flex;gap:8px;align-items:center;">
+            <select class="select" name="status" style="min-width:120px;">
+              {% for s in ['pending', 'paid', 'shipped', 'completed', 'cancelled'] %}
+                <option value="{{ s }}" {{ 'selected' if o.status == s else '' }}>{{ s }}</option>
+              {% endfor %}
+            </select>
+            <button class="btn btn-secondary btn-sm" type="submit">Simpan</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty-state">
+  <span class="emoji">🧾</span>
+  <p>Belum ada pesanan masuk.</p>
+</div>
+{% endif %}
+
+{% endblock %}

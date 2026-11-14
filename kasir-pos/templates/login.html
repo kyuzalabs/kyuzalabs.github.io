@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Masuk — KyzuKasir{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="card auth-card">
+    <h1>Masuk</h1>
+    <p class="muted">Login kasir / admin KyzuKasir.</p>
+    <form method="POST">
+      <div class="field">
+        <label class="label">Email</label>
+        <input class="input" name="email" type="email" required autofocus>
+      </div>
+      <div class="field">
+        <label class="label">Password</label>
+        <input class="input" name="password" type="password" required>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Masuk</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

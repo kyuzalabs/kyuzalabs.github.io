@@ -1,0 +1,79 @@
+:root {
+  --bg:#0f1117; --card:#1a1e2a; --text:#e8eaf0; --muted:#9aa3b5;
+  --accent:#6c7bff; --ok:#2dd4a7; --warn:#f5b942; --bad:#f05555; --border:#262b3d;
+}
+* { box-sizing: border-box; }
+body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.5; }
+a { color: var(--accent); text-decoration: none; }
+.nav { display:flex; gap:16px; align-items:center; padding:14px 20px;
+  border-bottom:1px solid var(--border); }
+.nav .spacer { flex:1; }
+.wrap { padding: 20px; max-width: 900px; margin: 0 auto; }
+h2 { margin: 26px 0 12px; }
+h3 { margin: 22px 0 8px; }
+
+.revenue { background: linear-gradient(135deg,#203a2e,#1a2e26);
+  border:1px solid #2f4a3b; padding:14px 18px; border-radius:14px; font-size:1.1rem; }
+.revenue b { color: var(--ok); }
+
+/* Meja */
+.tables { display:grid; grid-template-columns: repeat(auto-fill, minmax(110px,1fr)); gap:12px; }
+.table { display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:18px 8px; border-radius:14px; font-weight:700;
+  width:100%; border:1px solid var(--border); cursor:pointer; }
+.table span { font-weight:400; font-size:.85rem; }
+.table.free { background: var(--card); color: var(--text); }
+.table.free span { color: var(--muted); }
+.table.busy { background:#2a2030; border-color:#4a3350; color:#f2c2ff; }
+
+/* Menu chips */
+.menu { display:flex; flex-wrap:wrap; gap:10px; }
+.chip { background:var(--card); border:1px solid var(--border); border-radius:12px;
+  padding:9px 13px; color:var(--text); }
+button.chip { cursor:pointer; }
+button.chip.add:hover { border-color: var(--accent); }
+.chip .muted { font-size:.85rem; }
+
+/* Order berjalan */
+.roworder { display:flex; gap:12px; align-items:center; padding:12px 14px;
+  background:var(--card); border:1px solid var(--border); border-radius:12px; margin-bottom:8px; }
+.badge { padding:2px 10px; border-radius:20px; font-size:.78rem; font-weight:700; text-transform:uppercase; }
+.badge.active { background:#1e2a3a; color:#8fb6ff; }
+.badge.paid { background:#1e3a2e; color:#6fe0b2; }
+.badge.done { background:var(--border); color:var(--muted); }
+
+/* Tabel garis */
+.lines { width:100%; border-collapse:collapse; margin-top:10px; }
+.lines th, .lines td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--border); }
+.lines th { color:var(--muted); font-weight:600; font-size:.85rem; }
+.qtyform input { width:60px; }
+.total { margin-top:14px; font-size:1.15rem; }
+.total b { color: var(--ok); }
+
+/* Checkout */
+.checkout { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+select, input { background:#141825; border:1px solid var(--border); color:var(--text);
+  padding:10px 12px; border-radius:10px; }
+input[type=number] { max-width:180px; }
+.btn { display:inline-block; background:var(--accent); color:#fff; padding:10px 18px;
+  border-radius:10px; border:none; cursor:pointer; font-weight:600; }
+.btn:hover { filter:brightness(1.12); }
+.btn.ok { background: var(--ok); color:#062018; }
+.paid { padding:14px; background:#1e3a2e; border:1px solid #2f4a3b; border-radius:12px; margin:12px 0; }
+
+/* Dapur */
+.korder { background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:14px; margin-bottom:14px; }
+.khead { font-weight:700; margin-bottom:8px; display:flex; gap:10px; align-items:center; }
+.kitem { display:flex; gap:10px; align-items:center; padding:6px 0; border-bottom:1px solid #23283a; }
+.kitem:last-child { border-bottom:none; }
+.tick { width:34px; height:34px; border-radius:10px; border:1px solid var(--border);
+  background:transparent; color:var(--muted); font-size:1.1rem; cursor:pointer; }
+.tick.done { background:var(--ok); color:#062018; border-color:var(--ok); }
+
+/* Form menu */
+.addmenu { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+.del { background:transparent; color:var(--bad); border:1px solid #5a3030; border-radius:8px;
+  padding:5px 12px; cursor:pointer; }
+.flash { padding:10px 16px; margin:16px 20px 0; border-radius:10px; background:#2a2f45; }

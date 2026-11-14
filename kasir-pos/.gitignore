@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+kasir.env
+kasir_config.json
+*.db
+.env

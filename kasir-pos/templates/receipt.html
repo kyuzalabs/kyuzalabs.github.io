@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Struk #{{ order.id }} — KyzuKasir{% endblock %}
+{% block content %}
+<div class="receipt-wrap">
+  <div class="receipt mono">
+    <div class="r-head">
+      <h1>KYZU KASIR</h1>
+      <p>Warung makan &amp; cafe</p>
+    </div>
+    <div class="r-meta">
+      <div>Order: #{{ order.id }}</div>
+      <div>Meja: {{ table_name(order.table_id) }}</div>
+      <div>Waktu: {{ order.paid_at|ctime }}</div>
+    </div>
+    <div class="r-line"></div>
+    <div class="r-items">
+      {% for it in items %}
+      <div class="r-item"><span>{{ it.name }} ×{{ it.qty }}</span><span>{{ (it.qty * it.price_idr)|idr }}</span></div>
+      {% endfor %}
+    </div>
+    <div class="r-line"></div>
+    <div class="r-total"><span>TOTAL</span><span>{{ order.total_idr|idr }}</span></div>
+    <div class="r-pay">
+      <div>Bayar: {{ method_label(order.payment_method) }}</div>
+      {% if order.payment_method == 'cash' %}
+      <div>Tunai: {{ order.cash_received|idr }}</div>
+      <div>Kembali: {{ order.change_idr|idr }}</div>
+      {% endif %}
+    </div>
+    <div class="r-line"></div>
+    <div class="r-foot">Terima kasih 🙏</div>
+  </div>
+  <button class="btn btn-primary mt-16" onclick="window.print()">🖨️ Cetak Struk</button>
+  <a href="/kasir" class="btn btn-ghost mt-8 btn-block">Kembali ke Kasir</a>
+</div>
+{% endblock %}

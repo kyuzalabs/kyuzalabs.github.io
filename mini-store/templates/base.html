@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Kyuza Shop{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="/" class="logo">Kyuza<span class="dot">Shop</span></a>
+
+      <form class="nav-search" method="GET" action="/">
+        <input class="search-input" type="text" name="q" value="{{ request.args.get('q','') }}" placeholder="Cari game, voucher, top-up..." autocomplete="off">
+        <button class="nav-search-btn" type="submit" aria-label="Cari">🔍</button>
+      </form>
+
+      <div class="nav-actions">
+        {% set nav_cart = session.get('cart', []) %}
+        <a href="/cart" class="nav-cart" title="Keranjang">
+          🛒
+          {% if nav_cart %}<span class="badge-pill">{{ nav_cart|length }}</span>{% endif %}
+        </a>
+        {% if session.get('user_id') %}
+          <a href="/orders" class="nav-link">Pesanan</a>
+          {% if session.get('is_admin') %}
+          <a href="/admin" class="btn btn-secondary btn-sm">Admin</a>
+          {% endif %}
+          <span class="nav-user">Hai, <strong>{{ session.get('user_name','Kamu') }}</strong></span>
+          <a href="/logout" class="btn btn-ghost btn-sm">Keluar</a>
+        {% else %}
+          <a href="/login" class="btn btn-ghost btn-sm">Masuk</a>
+          <a href="/register" class="btn btn-primary btn-sm">Daftar</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="container flash">
+      {% for category, message in messages %}
+        <div class="flash-msg flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="main">
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      &copy; {{ 2026 }} <span class="grad">Kyuza Shop</span> — Top-up cepat, bayar pakai crypto.
+    </div>
+  </footer>
+</body>
+</html>

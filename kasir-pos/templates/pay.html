@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Bayar — KyzuKasir{% endblock %}
+{% block content %}
+<div class="pay-wrap">
+  <div class="card pay-card">
+    <h1>💳 Pembayaran</h1>
+    <p class="muted">{{ table }} · Order #{{ order.id }}</p>
+
+    <div class="pay-total">
+      <span class="muted">Total</span>
+      <span class="amount-hero">{{ total|idr }}</span>
+    </div>
+
+    <form method="POST">
+      <div class="radio-group">
+        <label class="radio-card">
+          <input type="radio" name="method" value="cash" checked>
+          <span class="rc-body"><span class="rc-symbol">💵 Tunai</span><span class="rc-check"></span></span>
+        </label>
+        <label class="radio-card">
+          <input type="radio" name="method" value="qris">
+          <span class="rc-body"><span class="rc-symbol">📱 QRIS</span><span class="rc-check"></span></span>
+        </label>
+        <label class="radio-card">
+          <input type="radio" name="method" value="transfer">
+          <span class="rc-body"><span class="rc-symbol">🏦 Transfer Bank</span><span class="rc-check"></span></span>
+        </label>
+        <label class="radio-card">
+          <input type="radio" name="method" value="crypto">
+          <span class="rc-body"><span class="rc-symbol">🪙 Crypto</span><span class="rc-check"></span></span>
+        </label>
+      </div>
+
+      <div id="cash-box" class="field mt-16">
+        <label class="label">Uang tunai diterima</label>
+        <input class="input" type="number" name="cash_received" value="{{ total }}" inputmode="numeric">
+        <div class="quick-cash">
+          <button type="button" class="qc" data-amt="{{ total }}">Uang pas</button>
+          <button type="button" class="qc" data-amt="{{ ((total // 10000) + 1) * 10000 }}">{{ (((total // 10000) + 1) * 10000)|idr }}</button>
+          <button type="button" class="qc" data-amt="{{ ((total // 50000) + 1) * 50000 }}">{{ (((total // 50000) + 1) * 50000)|idr }}</button>
+        </div>
+      </div>
+
+      <div id="crypto-box" class="field mt-16 hidden">
+        <label class="label">Koin crypto</label>
+        <select class="select" name="crypto_symbol">
+          <option value="USDT">USDT</option>
+          <option value="USDC">USDC</option>
+        </select>
+        <p class="form-hint">Dicatat manual — penyelesaian via wallet terpisah.</p>
+      </div>
+
+      <button class="btn btn-primary btn-block mt-16" type="submit">Bayar Sekarang</button>
+      <a href="/kasir?order={{ order.id }}" class="btn btn-ghost btn-block mt-8">Kembali</a>
+    </form>
+  </div>
+</div>
+
+<script>
+(function () {
+  var cashBox = document.getElementById('cash-box');
+  var cryptoBox = document.getElementById('crypto-box');
+  var cashInput = document.querySelector('input[name="cash_received"]');
+  var radios = document.querySelectorAll('input[name="method"]');
+  function update() {
+    var v = document.querySelector('input[name="method"]:checked').value;
+    cashBox.style.display = v === 'cash' ? '' : 'none';
+    cryptoBox.style.display = v === 'crypto' ? '' : 'none';
+  }
+  radios.forEach(function (r) { r.addEventListener('change', update); });
+  document.querySelectorAll('.qc').forEach(function (b) {
+    b.addEventListener('click', function () { cashInput.value = b.dataset.amt; });
+  });
+  update();
+})();
+</script>
+{% endblock %}

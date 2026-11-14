@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Pesanan Saya — Kyuza Shop{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1 class="page-title">Pesanan saya</h1>
+  <p class="page-sub">Semua riwayat belanjamu ada di sini.</p>
+</div>
+
+{% if orders %}
+  {% for o in orders %}
+  <a href="/order/{{ o.id }}" class="order-row">
+    <div>
+      <span class="order-id">#{{ o.id }}</span>
+    </div>
+    <div class="order-meta">
+      <p class="om-title">Rp {{ '{:,.0f}'.format(o.total_idr).replace(',', '.') }}</p>
+      <p class="om-sub">
+        {{ o.created_at }}
+        {% if o.crypto_symbol %} &middot; {{ o.crypto_symbol }}{% endif %}
+      </p>
+    </div>
+    <span class="badge badge-{{ o.status }}">{{ o.status }}</span>
+    <span class="order-arrow">›</span>
+  </a>
+  {% endfor %}
+{% else %}
+<div class="empty-state">
+  <span class="emoji">📦</span>
+  <p>Belum ada pesanan.<br>Saatnya belanja sesuatu yang kamu suka!</p>
+  <a href="/" class="btn btn-primary mt-16">Mulai Belanja</a>
+</div>
+{% endif %}
+
+{% endblock %}

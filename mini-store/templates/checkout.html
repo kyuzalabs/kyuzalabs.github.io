@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Checkout — Kyuza Shop{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1 class="page-title">Checkout</h1>
+  <p class="page-sub">Pilih token crypto yang mau kamu pakai buat bayar.</p>
+</div>
+
+{% if cart %}
+<form method="POST" action="/checkout">
+  <div class="cart-layout">
+    <div>
+      <div class="card">
+        <h3 class="panel-title">Ringkasan pesanan</h3>
+        {% for item in cart %}
+        <div class="summary-row">
+          <span>{{ item.name }} &times; {{ item.qty }}</span>
+          <span>Rp {{ '{:,.0f}'.format(item.subtotal).replace(',', '.') }}</span>
+        </div>
+        {% endfor %}
+        <hr class="divider">
+        <div class="summary-total">
+          <span>Total</span>
+          <span class="price">Rp {{ '{:,.0f}'.format(total_idr).replace(',', '.') }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3 class="panel-title">Metode pembayaran</h3>
+        {% if tokens %}
+        <div class="radio-group">
+          {% for t in tokens %}
+            {% if t is mapping %}
+              {% set sym = t.symbol %}
+              {% set net = t.network or '' %}
+              {% set note = t.note or '' %}
+            {% else %}
+              {% set sym = t %}
+              {% set net = '' %}
+              {% set note = '' %}
+            {% endif %}
+          <label class="radio-card">
+            <input type="radio" name="crypto_symbol" value="{{ sym }}" required {% if loop.first %}checked{% endif %}>
+            <div class="rc-body">
+              <span class="rc-symbol">{{ sym }}</span>
+              {% if net or note %}
+              <div>
+                {% if net %}<div class="rc-meta">Network: {{ net }}</div>{% endif %}
+                {% if note %}<div class="rc-meta">{{ note }}</div>{% endif %}
+              </div>
+              {% endif %}
+              <span class="rc-check"></span>
+            </div>
+          </label>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="muted">Belum ada token crypto yang tersedia.</p>
+        {% endif %}
+      </div>
+
+      <button class="btn btn-primary btn-block mt-16" type="submit" {% if not tokens %}disabled{% endif %}>🚀 Buat Pesanan &amp; Bayar</button>
+      <p class="form-hint" style="text-align:center;">Pesanan dibuat, lalu kamu diarahkan ke halaman pembayaran.</p>
+    </div>
+  </div>
+</form>
+
+{% else %}
+<div class="empty-state">
+  <span class="emoji">🧾</span>
+  <p>Keranjangmu kosong. Nggak ada yang bisa di-checkout.</p>
+  <a href="/" class="btn btn-primary mt-16">Mulai Belanja</a>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Top-up Game & Voucher — Kyuza Shop{% endblock %}
+{% block content %}
+
+<div class="hero">
+  <div class="hero-text">
+    <h1 class="page-title">Top-up game <span class="grad-word">instan</span></h1>
+    <p class="page-sub">Diamond, UC, Robux, Genesis Crystal & voucher — masuk otomatis, bayar pakai crypto.</p>
+  </div>
+  <div class="hero-emoji">⚡</div>
+</div>
+
+{% if categories %}
+<div class="chips">
+  <a href="/" class="chip {{ 'active' if not cat else '' }}">Semua</a>
+  {% for c in categories %}
+    <a href="/?cat={{ c|urlencode }}{{ '&q=' ~ q|urlencode if q else '' }}" class="chip {{ 'active' if cat == c else '' }}">{{ c }}</a>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if products %}
+<div class="card-grid">
+  {% for p in products %}
+  <a href="/product/{{ p.id }}" class="product-card">
+    <div class="product-tile">
+      <span class="tile-emoji">{{ p.emoji or '🎮' }}</span>
+    </div>
+    <div class="product-body">
+      <span class="product-cat">{{ p.category }}</span>
+      <h3 class="product-name">{{ p.name }}</h3>
+      <div class="product-foot">
+        <span class="price"><span class="cur">Rp</span> {{ '{:,.0f}'.format(p.price_idr).replace(',', '.') }}</span>
+        <span class="buy-pill">Beli</span>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <span class="emoji">🔍</span>
+  <p>Nggak ketemu produk yang cocok.<br>Coba kata kunci lain atau lihat semua kategori ya.</p>
+</div>
+{% endif %}
+
+{% endblock %}

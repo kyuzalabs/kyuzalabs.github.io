@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Masuk — Kyuza Shop{% endblock %}
+{% block content %}
+
+<div class="auth-wrap">
+  <div class="card auth-card">
+    <h1>Masuk</h1>
+    <p class="page-sub">Lanjut belanja dengan akunmu.</p>
+
+    <form method="POST" action="/login" class="mt-16">
+      <div class="field">
+        <label class="label" for="email">Email</label>
+        <input class="input" type="email" id="email" name="email" placeholder="kamu@email.com" required>
+      </div>
+      <div class="field">
+        <label class="label" for="password">Password</label>
+        <input class="input" type="password" id="password" name="password" placeholder="••••••••" required>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Masuk</button>
+    </form>
+
+    <p class="auth-alt">Belum punya akun? <a href="/register">Daftar sekarang</a></p>
+  </div>
+</div>
+
+{% endblock %}

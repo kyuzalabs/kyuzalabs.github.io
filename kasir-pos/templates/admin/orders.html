@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h1 class="page-title">🧾 Riwayat Pesanan</h1>
+
+{% if orders %}
+<div class="table-wrap mt-16">
+  <table class="table">
+    <tr><th>#</th><th>Meja</th><th>Item</th><th>Total</th><th>Metode</th><th>Status</th><th>Waktu</th></tr>
+    {% for o in orders %}
+    <tr>
+      <td>#{{ o.id }}</td>
+      <td>{{ o.table }}</td>
+      <td>{{ o.lines|length }} item</td>
+      <td>{{ o.total_idr|idr }}</td>
+      <td>{{ method_label(o.payment_method) }}</td>
+      <td><span class="badge {{ o.status }}">{{ o.status }}</span></td>
+      <td>{{ o.created_at|ctime }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% else %}
+<div class="empty-state"><span class="emoji">🧾</span><p>Belum ada pesanan.</p></div>
+{% endif %}
+{% endblock %}

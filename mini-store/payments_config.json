@@ -1,0 +1,6 @@
+{
+  "wallet_address": "0x0000000000000000000000000000000000000000",
+  "idr_rate": 16000,
+  "networks": {"USDC": "polygon", "USDT": "bsc"},
+  "note": "GANTI wallet_address dengan alamat wallet admin sebelum go-live"
+}

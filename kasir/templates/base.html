@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Kasir{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="nav">
+  <a href="{{ url_for('index') }}"><strong>☕ Kasir</strong></a>
+  <span class="spacer"></span>
+  <a href="{{ url_for('kitchen') }}">Dapur</a>
+  <a href="{{ url_for('menu') }}">Menu</a>
+</nav>
+{% with msgs = get_flashed_messages() %}
+  {% for m in msgs %}<div class="flash">{{ m }}</div>{% endfor %}
+{% endwith %}
+{% block body %}{% endblock %}
+</body>
+</html>

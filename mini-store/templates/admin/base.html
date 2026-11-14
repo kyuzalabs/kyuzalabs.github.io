@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Admin — Kyuza Shop{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="admin-layout">
+
+  <aside class="sidebar">
+    <a href="/" class="logo">Kyuza Shop<span class="dot">.</span></a>
+
+    <span class="sidebar-label">Menu</span>
+    <a href="/admin" class="sidebar-link {{ 'active' if request.path == '/admin' or request.path == '/admin/' else '' }}">📊 Dashboard</a>
+    <a href="/admin/products" class="sidebar-link {{ 'active' if request.path.startswith('/admin/products') else '' }}">📦 Produk</a>
+    <a href="/admin/orders" class="sidebar-link {{ 'active' if request.path.startswith('/admin/orders') else '' }}">🧾 Pesanan</a>
+
+    <span class="sidebar-label">Lainnya</span>
+    <a href="/" class="sidebar-link">🏪 Kembali ke toko</a>
+    <a href="/logout" class="sidebar-link">🚪 Keluar</a>
+  </aside>
+
+  <main class="admin-main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="flash" style="margin:0 0 20px;">
+        {% for category, message in messages %}
+          <div class="flash-msg flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+</div>
+</body>
+</html>
